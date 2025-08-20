@@ -56,29 +56,29 @@ export default function AdminDashboardPage() {
 
     const adminMenuItems = [
         {
-            title: "Управление пользователями",
-            description: "Просмотр, редактирование и удаление пользователей",
+            title: "User Management",
+            description: "View, edit and delete users",
             icon: <People fontSize="large" />,
             path: ROUTES.adminUsers,
             color: "#1976d2",
         },
         {
-            title: "Управление карточками",
-            description: "Модерация и управление бизнес-карточками",
+            title: "Card Management",
+            description: "Moderation and management of business cards",
             icon: <CreditCard fontSize="large" />,
             path: ROUTES.adminCards,
             color: "#2e7d32",
         },
         {
-            title: "Аналитика",
-            description: "Статистика и отчеты системы",
+            title: "Analytics",
+            description: "System statistics and reports",
             icon: <BarChart fontSize="large" />,
             path: "#",
             color: "#ed6c02",
         },
         {
-            title: "Безопасность",
-            description: "Настройки безопасности и логи",
+            title: "Security",
+            description: "Security settings and logs",
             icon: <Security fontSize="large" />,
             path: "#",
             color: "#d32f2f",
@@ -86,20 +86,20 @@ export default function AdminDashboardPage() {
     ];
 
     const quickStats = [
-        { title: "Всего пользователей", value: stats.totalUsers.toString(), color: "#1976d2" },
-        { title: "Бизнес пользователи", value: stats.businessUsers.toString(), color: "#2e7d32" },
-        { title: "Всего карточек", value: stats.totalCards.toString(), color: "#ed6c02" },
-        { title: "Всего лайков", value: stats.totalLikes.toString(), color: "#9c27b0" },
+        { title: "Total Users", value: stats.totalUsers.toString(), color: "#1976d2" },
+        { title: "Business Users", value: stats.businessUsers.toString(), color: "#2e7d32" },
+        { title: "Total Cards", value: stats.totalCards.toString(), color: "#ed6c02" },
+        { title: "Total Likes", value: stats.totalLikes.toString(), color: "#9c27b0" },
     ];
 
     return (
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Box sx={{ mb: 4 }}>
                 <Typography variant="h3" component="h1" gutterBottom>
-                    Панель администратора
+                    Admin Dashboard
                 </Typography>
                 <Typography variant="subtitle1" color="text.secondary">
-                    Добро пожаловать в административную панель управления
+                    Welcome to the administrative control panel
                 </Typography>
             </Box>
 
@@ -197,7 +197,7 @@ export default function AdminDashboardPage() {
                                                 navigate(item.path);
                                             }}
                                         >
-                                            Перейти
+                                            Go to
                                         </Button>
                                     </CardContent>
                                 </Card>
@@ -210,7 +210,7 @@ export default function AdminDashboardPage() {
                         <Grid item xs={12}>
                             <Paper sx={{ p: 3 }}>
                                 <Typography variant="h6" gutterBottom>
-                                    Последняя активность
+                                    Recent Activity
                                 </Typography>
                                 <Divider sx={{ mb: 2 }} />
                                 <List>
@@ -219,8 +219,8 @@ export default function AdminDashboardPage() {
                                             <People />
                                         </ListItemIcon>
                                         <ListItemText
-                                            primary="Новый пользователь зарегистрирован"
-                                            secondary="2 минуты назад"
+                                            primary="New user registered"
+                                            secondary="2 minutes ago"
                                         />
                                     </ListItem>
                                     <ListItem>
@@ -228,8 +228,8 @@ export default function AdminDashboardPage() {
                                             <CreditCard />
                                         </ListItemIcon>
                                         <ListItemText
-                                            primary="Создана новая бизнес-карточка"
-                                            secondary="5 минут назад"
+                                            primary="New business card created"
+                                            secondary="5 minutes ago"
                                         />
                                     </ListItem>
                                     <ListItem>
@@ -237,8 +237,8 @@ export default function AdminDashboardPage() {
                                             <Settings />
                                         </ListItemIcon>
                                         <ListItemText
-                                            primary="Обновлены настройки системы"
-                                            secondary="1 час назад"
+                                            primary="System settings updated"
+                                            secondary="1 hour ago"
                                         />
                                     </ListItem>
                                 </List>

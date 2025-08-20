@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
     Container,
     Paper,
@@ -240,7 +240,7 @@ function UserProfilePage() {
                             >
                                 <AdminPanelSettings fontSize="small" />
                                 <Typography variant="caption" fontWeight="bold">
-                                    Администратор
+                                    Administrator
                                 </Typography>
                             </Box>
                         )}
@@ -259,7 +259,7 @@ function UserProfilePage() {
                             >
                                 <Business fontSize="small" />
                                 <Typography variant="caption" fontWeight="bold">
-                                    Бизнес
+                                    Business
                                 </Typography>
                             </Box>
                         )}
@@ -278,7 +278,7 @@ function UserProfilePage() {
                             >
                                 <UserIcon fontSize="small" />
                                 <Typography variant="caption" fontWeight="bold">
-                                    Пользователь
+                                    User
                                 </Typography>
                             </Box>
                         )}

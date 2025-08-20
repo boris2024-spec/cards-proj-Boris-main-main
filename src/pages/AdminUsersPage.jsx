@@ -62,7 +62,7 @@ export default function AdminUsersPage() {
             });
             setUsers(response.data);
         } catch (error) {
-            setError("Ошибка при загрузке пользователей");
+            setError("Error loading users");
             console.error("Error fetching users:", error);
         } finally {
             setLoading(false);
@@ -82,15 +82,15 @@ export default function AdminUsersPage() {
                     : user
             ));
 
-            setSuccess(`Статус пользователя обновлен`);
+            setSuccess(`User status updated`);
         } catch (error) {
-            setError("Ошибка при обновлении статуса пользователя");
+            setError("Error updating user status");
             console.error("Error updating user:", error);
         }
     };
 
     const handleDeleteUser = async (userId) => {
-        if (!window.confirm("Вы уверены, что хотите удалить этого пользователя?")) {
+        if (!window.confirm("Are you sure you want to delete this user?")) {
             return;
         }
 
@@ -100,9 +100,9 @@ export default function AdminUsersPage() {
             });
 
             setUsers(users.filter(user => user._id !== userId));
-            setSuccess("Пользователь удален");
+            setSuccess("User deleted");
         } catch (error) {
-            setError("Ошибка при удалении пользователя");
+            setError("Error deleting user");
             console.error("Error deleting user:", error);
         }
     };
@@ -141,21 +141,21 @@ export default function AdminUsersPage() {
                 });
 
                 setUsers(users.map(u => u._id === user._id ? editUser : u));
-                setSuccess("Пользователь обновлен");
+                setSuccess("User updated");
                 onClose();
             } catch (error) {
-                setError("Ошибка при сохранении изменений");
+                setError("Error saving changes");
                 console.error("Error updating user:", error);
             }
         };
 
         return (
             <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-                <DialogTitle>Редактирование пользователя</DialogTitle>
+                <DialogTitle>Edit User</DialogTitle>
                 <DialogContent>
                     <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
                         <TextField
-                            label="Имя"
+                            label="First Name"
                             value={editUser.name?.first || ""}
                             onChange={(e) => setEditUser({
                                 ...editUser,
@@ -164,7 +164,7 @@ export default function AdminUsersPage() {
                             fullWidth
                         />
                         <TextField
-                            label="Фамилия"
+                            label="Last Name"
                             value={editUser.name?.last || ""}
                             onChange={(e) => setEditUser({
                                 ...editUser,
@@ -179,7 +179,7 @@ export default function AdminUsersPage() {
                             fullWidth
                         />
                         <TextField
-                            label="Телефон"
+                            label="Phone"
                             value={editUser.phone || ""}
                             onChange={(e) => setEditUser({ ...editUser, phone: e.target.value })}
                             fullWidth
@@ -191,7 +191,7 @@ export default function AdminUsersPage() {
                                     onChange={(e) => setEditUser({ ...editUser, isBusiness: e.target.checked })}
                                 />
                             }
-                            label="Бизнес аккаунт"
+                            label="Business Account"
                         />
                         <FormControlLabel
                             control={
@@ -200,14 +200,14 @@ export default function AdminUsersPage() {
                                     onChange={(e) => setEditUser({ ...editUser, isAdmin: e.target.checked })}
                                 />
                             }
-                            label="Администратор"
+                            label="Administrator"
                         />
                     </Box>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={onClose}>Отмена</Button>
+                    <Button onClick={onClose}>Cancel</Button>
                     <Button onClick={handleSave} variant="contained">
-                        Сохранить
+                        Save
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -218,14 +218,14 @@ export default function AdminUsersPage() {
         <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
             <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <Typography variant="h4" component="h1">
-                    Управление пользователями
+                    User Management
                 </Typography>
                 <Button
                     variant="contained"
                     onClick={fetchUsers}
                     disabled={loading}
                 >
-                    Обновить
+                    Refresh
                 </Button>
             </Box>
 
@@ -243,7 +243,7 @@ export default function AdminUsersPage() {
 
             <Box sx={{ mb: 3 }}>
                 <TextField
-                    placeholder="Поиск пользователей..."
+                    placeholder="Search users..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     InputProps={{
@@ -261,12 +261,12 @@ export default function AdminUsersPage() {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Пользователь</TableCell>
+                            <TableCell>User</TableCell>
                             <TableCell>Email</TableCell>
-                            <TableCell>Телефон</TableCell>
-                            <TableCell>Роль</TableCell>
-                            <TableCell>Статус</TableCell>
-                            <TableCell align="center">Действия</TableCell>
+                            <TableCell>Phone</TableCell>
+                            <TableCell>Role</TableCell>
+                            <TableCell>Status</TableCell>
+                            <TableCell align="center">Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -294,7 +294,7 @@ export default function AdminUsersPage() {
                                         {user.isAdmin && (
                                             <Chip
                                                 icon={<AdminPanelSettings />}
-                                                label="Администратор"
+                                                label="Administrator"
                                                 color="error"
                                                 size="small"
                                             />
@@ -302,20 +302,20 @@ export default function AdminUsersPage() {
                                         {user.isBusiness && (
                                             <Chip
                                                 icon={<Business />}
-                                                label="Бизнес"
+                                                label="Business"
                                                 color="primary"
                                                 size="small"
                                             />
                                         )}
                                         {!user.isAdmin && !user.isBusiness && (
-                                            <Chip label="Пользователь" size="small" />
+                                            <Chip label="User" size="small" />
                                         )}
                                     </Box>
                                 </TableCell>
                                 <TableCell>
                                     <Chip
                                         icon={user.isBlocked ? <Block /> : <CheckCircle />}
-                                        label={user.isBlocked ? "Заблокирован" : "Активен"}
+                                        label={user.isBlocked ? "Blocked" : "Active"}
                                         color={user.isBlocked ? "error" : "success"}
                                         size="small"
                                     />
@@ -338,7 +338,7 @@ export default function AdminUsersPage() {
                                             variant="outlined"
                                             color={user.isBlocked ? "success" : "warning"}
                                         >
-                                            {user.isBlocked ? "Разблокировать" : "Заблокировать"}
+                                            {user.isBlocked ? "Unblock" : "Block"}
                                         </Button>
                                         <IconButton
                                             onClick={() => handleDeleteUser(user._id)}
@@ -361,7 +361,7 @@ export default function AdminUsersPage() {
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
-                    labelRowsPerPage="Строк на странице:"
+                    labelRowsPerPage="Rows per page:"
                 />
             </TableContainer>
 

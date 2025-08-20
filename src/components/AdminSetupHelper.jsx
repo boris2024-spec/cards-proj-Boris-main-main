@@ -23,7 +23,7 @@ export default function AdminSetupHelper() {
 
     const handleMakeAdmin = async () => {
         if (!email.trim()) {
-            setError("Введите email пользователя");
+            setError("Please enter user email");
             return;
         }
 
@@ -32,18 +32,18 @@ export default function AdminSetupHelper() {
         setMessage("");
 
         try {
-            // Сначала попробуем найти пользователя по email
+            // First try to find user by email
             const usersResponse = await axios.get(`${API_BASE_URL}/users`);
             const users = usersResponse.data;
             const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
 
             if (!user) {
-                setError("Пользователь с таким email не найден");
+                setError("User with this email not found");
                 return;
             }
 
-            // Обновляем пользователя, делая его администратором
-            const updateResponse = await axios.put(
+            // Update user, making them admin
+            await axios.put(
                 `${API_BASE_URL}/users/${user._id}`,
                 { ...user, isAdmin: true },
                 {
@@ -51,15 +51,15 @@ export default function AdminSetupHelper() {
                 }
             );
 
-            setMessage(`Пользователь ${email} теперь администратор!`);
+            setMessage(`User ${email} is now an administrator!`);
             setEmail("");
         } catch (error) {
             if (error.response?.status === 403) {
-                setError("Недостаточно прав для выполнения операции");
+                setError("Insufficient permissions to perform this operation");
             } else if (error.response?.status === 401) {
-                setError("Неверный токен");
+                setError("Invalid token");
             } else {
-                setError("Ошибка при назначении администратора: " + (error.response?.data?.message || error.message));
+                setError("Error assigning administrator: " + (error.response?.data?.message || error.message));
             }
         } finally {
             setLoading(false);
@@ -74,15 +74,15 @@ export default function AdminSetupHelper() {
                 onClick={() => setOpen(true)}
                 sx={{ position: "fixed", bottom: 16, right: 16, zIndex: 1000 }}
             >
-                Назначить админа
+                Assign Admin
             </Button>
 
             <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
-                <DialogTitle>Назначение администратора</DialogTitle>
+                <DialogTitle>Admin Assignment</DialogTitle>
                 <DialogContent>
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                        Эта функция предназначена для назначения первого администратора системы.
-                        Используйте с осторожностью!
+                        This function is designed to assign the first system administrator.
+                        Use with caution!
                     </Typography>
 
                     {error && (
@@ -99,7 +99,7 @@ export default function AdminSetupHelper() {
 
                     <TextField
                         fullWidth
-                        label="Email пользователя"
+                        label="User Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         sx={{ mb: 2 }}
@@ -108,21 +108,21 @@ export default function AdminSetupHelper() {
 
                     <TextField
                         fullWidth
-                        label="Токен администратора (если требуется)"
+                        label="Admin Token (if required)"
                         value={adminToken}
                         onChange={(e) => setAdminToken(e.target.value)}
-                        placeholder="Оставьте пустым, если не требуется"
+                        placeholder="Leave empty if not required"
                         type="password"
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setOpen(false)}>Отмена</Button>
+                    <Button onClick={() => setOpen(false)}>Cancel</Button>
                     <Button
                         onClick={handleMakeAdmin}
                         variant="contained"
                         disabled={loading}
                     >
-                        {loading ? "Обработка..." : "Назначить администратором"}
+                        {loading ? "Processing..." : "Assign Administrator"}
                     </Button>
                 </DialogActions>
             </Dialog>

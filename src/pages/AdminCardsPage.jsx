@@ -62,7 +62,7 @@ export default function AdminCardsPage() {
             });
             setCards(response.data);
         } catch (error) {
-            setError("Ошибка при загрузке карточек");
+            setError("Error loading cards");
             console.error("Error fetching cards:", error);
         } finally {
             setLoading(false);
@@ -82,15 +82,15 @@ export default function AdminCardsPage() {
                     : card
             ));
 
-            setSuccess(`Статус карточки обновлен`);
+            setSuccess(`Card status updated`);
         } catch (error) {
-            setError("Ошибка при обновлении статуса карточки");
+            setError("Error updating card status");
             console.error("Error updating card:", error);
         }
     };
 
     const handleDeleteCard = async (cardId) => {
-        if (!window.confirm("Вы уверены, что хотите удалить эту карточку?")) {
+        if (!window.confirm("Are you sure you want to delete this card?")) {
             return;
         }
 
@@ -100,9 +100,9 @@ export default function AdminCardsPage() {
             });
 
             setCards(cards.filter(card => card._id !== cardId));
-            setSuccess("Карточка удалена");
+            setSuccess("Card deleted");
         } catch (error) {
-            setError("Ошибка при удалении карточки");
+            setError("Error deleting card");
             console.error("Error deleting card:", error);
         }
     };
@@ -132,7 +132,7 @@ export default function AdminCardsPage() {
 
         return (
             <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-                <DialogTitle>Детали карточки</DialogTitle>
+                <DialogTitle>Card Details</DialogTitle>
                 <DialogContent>
                     <Grid container spacing={2} sx={{ mt: 1 }}>
                         <Grid item xs={12} md={6}>
@@ -176,7 +176,7 @@ export default function AdminCardsPage() {
 
                             <Box sx={{ mt: 2 }}>
                                 <Typography variant="subtitle2">Статистика:</Typography>
-                                <Typography variant="body2">Лайков: {card.likes?.length || 0}</Typography>
+                                <Typography variant="body2">Likes: {card.likes?.length || 0}</Typography>
                                 <Typography variant="body2">
                                     Создано: {new Date(card.createdAt).toLocaleDateString()}
                                 </Typography>
@@ -185,7 +185,7 @@ export default function AdminCardsPage() {
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={onClose}>Закрыть</Button>
+                    <Button onClick={onClose}>Close</Button>
                 </DialogActions>
             </Dialog>
         );
@@ -195,14 +195,14 @@ export default function AdminCardsPage() {
         <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
             <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <Typography variant="h4" component="h1">
-                    Управление карточками
+                    Card Management
                 </Typography>
                 <Button
                     variant="contained"
                     onClick={fetchCards}
                     disabled={loading}
                 >
-                    Обновить
+                    Refresh
                 </Button>
             </Box>
 
@@ -221,7 +221,7 @@ export default function AdminCardsPage() {
             {/* Filters */}
             <Box sx={{ mb: 3, display: "flex", gap: 2, alignItems: "center" }}>
                 <TextField
-                    placeholder="Поиск карточек..."
+                    placeholder="Search cards..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     InputProps={{
@@ -234,19 +234,19 @@ export default function AdminCardsPage() {
                     sx={{ width: 300 }}
                 />
                 <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel>Статус</InputLabel>
+                    <InputLabel>Status</InputLabel>
                     <Select
                         value={statusFilter}
-                        label="Статус"
+                        label="Status"
                         onChange={(e) => setStatusFilter(e.target.value)}
                     >
-                        <MenuItem value="all">Все</MenuItem>
-                        <MenuItem value="active">Активные</MenuItem>
-                        <MenuItem value="blocked">Заблокированные</MenuItem>
+                        <MenuItem value="all">All</MenuItem>
+                        <MenuItem value="active">Active</MenuItem>
+                        <MenuItem value="blocked">Blocked</MenuItem>
                     </Select>
                 </FormControl>
                 <Typography variant="body2" color="text.secondary">
-                    Найдено: {filteredCards.length} карточек
+                    Found: {filteredCards.length} cards
                 </Typography>
             </Box>
 
@@ -277,12 +277,12 @@ export default function AdminCardsPage() {
                                 <Box sx={{ mt: 2, display: "flex", gap: 1, flexWrap: "wrap" }}>
                                     <Chip
                                         icon={card.isBlocked ? <Block /> : <CheckCircle />}
-                                        label={card.isBlocked ? "Заблокирована" : "Активна"}
+                                        label={card.isBlocked ? "Blocked" : "Active"}
                                         color={card.isBlocked ? "error" : "success"}
                                         size="small"
                                     />
                                     <Chip
-                                        label={`${card.likes?.length || 0} лайков`}
+                                        label={`${card.likes?.length || 0} likes`}
                                         size="small"
                                         variant="outlined"
                                     />
@@ -306,7 +306,7 @@ export default function AdminCardsPage() {
                                     variant="outlined"
                                     color={card.isBlocked ? "success" : "warning"}
                                 >
-                                    {card.isBlocked ? "Разблокировать" : "Заблокировать"}
+                                    {card.isBlocked ? "Unblock" : "Block"}
                                 </Button>
                                 <IconButton
                                     onClick={() => handleDeleteCard(card._id)}

@@ -16,7 +16,7 @@ const useAdmin = (token) => {
             });
             return response.data;
         } catch (error) {
-            setError("Ошибка при загрузке пользователей");
+            setError("Error loading users");
             throw error;
         } finally {
             setLoading(false);
@@ -30,10 +30,10 @@ const useAdmin = (token) => {
             const response = await axios.put(`${API_BASE_URL}/users/${userId}`, userData, {
                 headers: { "x-auth-token": token },
             });
-            setSuccess("Пользователь обновлен");
+            setSuccess("User updated");
             return response.data;
         } catch (error) {
-            setError("Ошибка при обновлении пользователя");
+            setError("Error updating user");
             throw error;
         } finally {
             setLoading(false);
@@ -47,9 +47,9 @@ const useAdmin = (token) => {
             await axios.delete(`${API_BASE_URL}/users/${userId}`, {
                 headers: { "x-auth-token": token },
             });
-            setSuccess("Пользователь удален");
+            setSuccess("User deleted");
         } catch (error) {
-            setError("Ошибка при удалении пользователя");
+            setError("Error deleting user");
             throw error;
         } finally {
             setLoading(false);
@@ -67,10 +67,10 @@ const useAdmin = (token) => {
                     headers: { "x-auth-token": token },
                 }
             );
-            setSuccess("Статус пользователя обновлен");
+            setSuccess("User status updated");
             return response.data;
         } catch (error) {
-            setError("Ошибка при обновлении статуса");
+            setError("Error updating status");
             throw error;
         } finally {
             setLoading(false);
@@ -86,7 +86,7 @@ const useAdmin = (token) => {
             });
             return response.data;
         } catch (error) {
-            setError("Ошибка при загрузке карточек");
+            setError("Error loading cards");
             throw error;
         } finally {
             setLoading(false);
@@ -100,10 +100,10 @@ const useAdmin = (token) => {
             const response = await axios.put(`${API_BASE_URL}/cards/${cardId}`, cardData, {
                 headers: { "x-auth-token": token },
             });
-            setSuccess("Карточка обновлена");
+            setSuccess("Card updated");
             return response.data;
         } catch (error) {
-            setError("Ошибка при обновлении карточки");
+            setError("Error updating card");
             throw error;
         } finally {
             setLoading(false);
@@ -117,9 +117,9 @@ const useAdmin = (token) => {
             await axios.delete(`${API_BASE_URL}/cards/${cardId}`, {
                 headers: { "x-auth-token": token },
             });
-            setSuccess("Карточка удалена");
+            setSuccess("Card deleted");
         } catch (error) {
-            setError("Ошибка при удалении карточки");
+            setError("Error deleting card");
             throw error;
         } finally {
             setLoading(false);
@@ -137,10 +137,10 @@ const useAdmin = (token) => {
                     headers: { "x-auth-token": token },
                 }
             );
-            setSuccess("Статус карточки обновлен");
+            setSuccess("Card status updated");
             return response.data;
         } catch (error) {
-            setError("Ошибка при обновлении статуса карточки");
+            setError("Error updating card status");
             throw error;
         } finally {
             setLoading(false);
@@ -173,7 +173,7 @@ const useAdmin = (token) => {
                 totalLikes: cards.reduce((sum, card) => sum + (card.likes?.length || 0), 0),
             };
         } catch (error) {
-            setError("Ошибка при загрузке статистики");
+            setError("Error loading statistics");
             throw error;
         } finally {
             setLoading(false);
