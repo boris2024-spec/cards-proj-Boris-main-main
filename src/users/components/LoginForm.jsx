@@ -12,10 +12,12 @@ import {
 } from "../services/localStorageService";
 import { useCurrentUser } from "../providers/UserProvider";
 import { useNavigate } from "react-router-dom";
+import { useSnack } from "../../providers/SnackbarProvider";
 
 function LoginForm() {
   const { setToken, setUser } = useCurrentUser();
   const navigate = useNavigate();
+  const setSnack = useSnack();
 
   const handleLogin = async (user) => {
     try {
@@ -27,10 +29,21 @@ function LoginForm() {
       setTokenInLocalStorage(response.data);
       setToken(response.data);
       setUser(getUser());
+      setSnack("success", "Добро пожаловать!");
       navigate("/");
     } catch (error) {
       console.log(error);
-      alert("The login failed");
+
+      // Обработка специфичных ошибок
+      const errorMessage = error.response?.data?.error?.message || error.message;
+
+      if (errorMessage.includes("blocked") || errorMessage.includes("заблокирован")) {
+        setSnack("error", "Пользователь заблокирован. Обратитесь к администратору.");
+      } else if (errorMessage.includes("Invalid email or password")) {
+        setSnack("error", "Неверный email или пароль");
+      } else {
+        setSnack("error", "Ошибка входа в систему");
+      }
     }
   };
 

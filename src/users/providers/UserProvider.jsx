@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useContext } from "react";
 import { useState } from "react";
 import { createContext } from "react";
-import { getToken, getUser } from "../services/localStorageService";
+import { getToken, getUser, removeToken } from "../services/localStorageService";
 import axios from "axios";
 import { API_BASE_URL } from "../services/userApiServicece";
 

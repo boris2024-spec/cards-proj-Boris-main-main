@@ -40,11 +40,16 @@ function CardsPage() {
       setIsLoading(true);
       setError(null);
 
-      const response = await axios.get(`${API_BASE_URL}/cards`);
+      // Получаем все карточки
+      const cardsResponse = await axios.get(`${API_BASE_URL}/cards`);
+      let allCards = cardsResponse.data;
 
-      setCards(response.data);
-      setFilteredCards(response.data);
-      setSnack("success", `Successfully loaded ${response.data.length} business cards`);
+      // Фильтруем заблокированные карточки - не показываем их обычным пользователям
+      allCards = allCards.filter(card => !card.isBlocked);
+
+      setCards(allCards);
+      setFilteredCards(allCards);
+      setSnack("success", `Successfully loaded ${allCards.length} business cards`);
     } catch (error) {
       console.error('Error fetching cards:', error);
       setError('Failed to load business cards. Please try again later.');
