@@ -69,20 +69,7 @@ export default function AdminDashboardPage() {
             path: ROUTES.adminCards,
             color: "#2e7d32",
         },
-        {
-            title: "Analytics",
-            description: "System statistics and reports",
-            icon: <BarChart fontSize="large" />,
-            path: "#",
-            color: "#ed6c02",
-        },
-        {
-            title: "Security",
-            description: "Security settings and logs",
-            icon: <Security fontSize="large" />,
-            path: "#",
-            color: "#d32f2f",
-        },
+
     ];
 
     const quickStats = [
@@ -118,14 +105,22 @@ export default function AdminDashboardPage() {
                     {/* Quick Stats */}
                     <Grid container spacing={3} sx={{ mb: 4 }}>
                         {quickStats.map((stat, index) => (
-                            <Grid item xs={12} sm={6} md={3} key={index}>
-                                <Card sx={{ height: "100%" }}>
+                            <Grid item xs={12} sm={12} md={3} key={index}>
+                                <Card
+                                    sx={{
+                                        height: "100%",
+                                        width: 200,
+                                        maxWidth: "100%",
+                                        mx: "auto"
+                                    }}
+                                >
                                     <CardContent>
                                         <Box
                                             sx={{
                                                 display: "flex",
                                                 alignItems: "center",
                                                 justifyContent: "space-between",
+                                                
                                             }}
                                         >
                                             <Box>
@@ -151,6 +146,9 @@ export default function AdminDashboardPage() {
                                 <Card
                                     sx={{
                                         height: "100%",
+                                        width: 425,
+                                        maxWidth: "100%",
+                                        mx: "auto",
                                         cursor: "pointer",
                                         transition: "transform 0.2s, box-shadow 0.2s",
                                         "&:hover": {

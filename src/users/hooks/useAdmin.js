@@ -60,13 +60,30 @@ const useAdmin = (token) => {
         try {
             setLoading(true);
             setError("");
-            const response = await axios.patch(
-                `${API_BASE_URL}/users/${userId}`,
-                { [field]: value },
-                {
-                    headers: { "x-auth-token": token },
-                }
-            );
+
+            let response;
+
+            // Специальная обработка для блокировки/разблокировки
+            if (field === "isBlocked") {
+                const endpoint = value ? "block" : "unblock";
+                response = await axios.patch(
+                    `${API_BASE_URL}/users/${userId}/${endpoint}`,
+                    {},
+                    {
+                        headers: { "x-auth-token": token },
+                    }
+                );
+            } else {
+                // Для других полей используем обычный PATCH
+                response = await axios.patch(
+                    `${API_BASE_URL}/users/${userId}`,
+                    { [field]: value },
+                    {
+                        headers: { "x-auth-token": token },
+                    }
+                );
+            }
+
             setSuccess("User status updated");
             return response.data;
         } catch (error) {

@@ -71,18 +71,35 @@ export default function AdminUsersPage() {
 
     const handleUserToggle = async (userId, field, currentValue) => {
         try {
-            const updateData = { [field]: !currentValue };
-            await axios.patch(`${API_BASE_URL}/users/${userId}`, updateData, {
-                headers: { "x-auth-token": token },
-            });
+            let response;
 
+            // Специальная обработка для блокировки/разблокировки
+            if (field === "isBlocked") {
+                const endpoint = !currentValue ? "block" : "unblock";
+                response = await axios.patch(`${API_BASE_URL}/users/${userId}/${endpoint}`, {}, {
+                    headers: { "x-auth-token": token },
+                });
+            } else {
+                // Для других полей используем обычный PATCH
+                const updateData = { [field]: !currentValue };
+                response = await axios.patch(`${API_BASE_URL}/users/${userId}`, updateData, {
+                    headers: { "x-auth-token": token },
+                });
+            }
+
+            // Обновляем состояние с данными из ответа сервера
             setUsers(users.map(user =>
-                user._id === userId
-                    ? { ...user, [field]: !currentValue }
-                    : user
+                user._id === userId ? response.data : user
             ));
 
-            setSuccess(`User status updated`);
+            // Улучшенное сообщение об успехе
+            if (field === "isBlocked" && !currentValue) {
+                setSuccess("User blocked and business status removed");
+            } else if (field === "isBlocked" && currentValue) {
+                setSuccess("User unblocked");
+            } else {
+                setSuccess("User status updated");
+            }
         } catch (error) {
             setError("Error updating user status");
             console.error("Error updating user:", error);
@@ -136,11 +153,30 @@ export default function AdminUsersPage() {
 
         const handleSave = async () => {
             try {
-                await axios.put(`${API_BASE_URL}/users/${user._id}`, editUser, {
+                // Сначала обновляем основные данные пользователя
+                const updatedUser = await axios.put(`${API_BASE_URL}/users/${user._id}`, {
+                    ...editUser,
+                    isBlocked: undefined // Исключаем isBlocked из основного обновления
+                }, {
                     headers: { "x-auth-token": token },
                 });
 
-                setUsers(users.map(u => u._id === user._id ? editUser : u));
+                let finalUser = updatedUser.data;
+
+                // Если статус блокировки изменился, обрабатываем его отдельно
+                if (editUser.isBlocked !== user.isBlocked) {
+                    const endpoint = editUser.isBlocked ? "block" : "unblock";
+                    const blockResponse = await axios.patch(
+                        `${API_BASE_URL}/users/${user._id}/${endpoint}`,
+                        {},
+                        {
+                            headers: { "x-auth-token": token },
+                        }
+                    );
+                    finalUser = blockResponse.data;
+                }
+
+                setUsers(users.map(u => u._id === user._id ? finalUser : u));
                 setSuccess("User updated");
                 onClose();
             } catch (error) {
@@ -201,6 +237,25 @@ export default function AdminUsersPage() {
                                 />
                             }
                             label="Administrator"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={editUser.isBlocked || false}
+                                    onChange={(e) => {
+                                        const isBlocked = e.target.checked;
+                                        const updatedUser = { ...editUser, isBlocked };
+
+                                        // При блокировке убираем статус бизнес-пользователя
+                                        if (isBlocked) {
+                                            updatedUser.isBusiness = false;
+                                        }
+
+                                        setEditUser(updatedUser);
+                                    }}
+                                />
+                            }
+                            label="Blocked"
                         />
                     </Box>
                 </DialogContent>
