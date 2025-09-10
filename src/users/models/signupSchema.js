@@ -37,6 +37,7 @@ const signupSchema = {
   zip: Joi.number(),
   isBusiness: Joi.boolean().required(),
   isAdmin: Joi.boolean().allow(false), // Add isAdmin field, defaults to false
+  adminCode: Joi.string().allow(""), // Optional admin code for admin registration
 };
 
 export default signupSchema;

@@ -24,6 +24,11 @@ const normalizeUser = (userDetails) => {
     isAdmin: userDetails.isAdmin || false, // Add isAdmin field with default false
   };
 
+  // Add adminCode only if it's provided and not empty
+  if (userDetails.adminCode && userDetails.adminCode.trim() !== "") {
+    userDetailsForServer.adminCode = userDetails.adminCode;
+  }
+
   return userDetailsForServer;
 };
 

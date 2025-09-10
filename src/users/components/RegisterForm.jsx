@@ -3,9 +3,12 @@ import {
   FormControlLabel,
   Checkbox,
   TextField,
-  Container
+  Container,
+  InputAdornment,
+  IconButton
 } from "@mui/material";
-import { useEffect } from "react";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useEffect, useState } from "react";
 
 import useForm from "../../hooks/useForm";
 import Form from "../../components/Form";
@@ -46,12 +49,24 @@ function RegisterForm() {
   const navigate = useNavigate();
   const { isDark } = useTheme();
   const snack = useSnack();
+  const [showAdminCode, setShowAdminCode] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { formDetails, errors, handleChange, handleSubmit, reset } = useForm(
     initialSignupForm,
     signupSchema,
     (userDetails) => handleSignup(userDetails, navigate, snack)
   );
+
+  // Toggle admin code visibility
+  const handleClickShowAdminCode = () => {
+    setShowAdminCode(!showAdminCode);
+  };
+
+  // Toggle password visibility
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   // Log current isBusiness state on each render
   console.log('RegisterForm render - formDetails.isBusiness:', formDetails.isBusiness);
@@ -156,12 +171,25 @@ function RegisterForm() {
               label="Password"
               fullWidth
               variant="outlined"
-              type="password"
+              type={showPassword ? "text" : "password"}
               error={Boolean(errors.password)}
               helperText={errors.password}
               onChange={handleChange}
               value={formDetails.password}
               required
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
           </Grid>
 
@@ -270,6 +298,34 @@ function RegisterForm() {
               helperText={errors.zip}
               onChange={handleChange}
               value={formDetails.zip}
+            />
+          </Grid>
+
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <TextField
+              name="adminCode"
+              label="Admin Code (Optional)"
+              fullWidth
+              variant="outlined"
+              type={showAdminCode ? "text" : "password"}
+              error={Boolean(errors.adminCode)}
+              helperText={errors.adminCode || "Enter admin code if you want admin privileges"}
+              onChange={handleChange}
+              value={formDetails.adminCode}
+            
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle admin code visibility"
+                      onClick={handleClickShowAdminCode}
+                      edge="end"
+                    >
+                      {showAdminCode ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
           </Grid>
 
