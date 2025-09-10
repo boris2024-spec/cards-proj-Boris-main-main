@@ -66,12 +66,10 @@ function RegisterForm() {
 
     <Container maxWidth="sm" >
       <Form
-
         onSubmit={handleSubmit}
         onReset={reset}
         title={"sign up form"}
         styles={{
-
           maxWidth: "none",
           backgroundColor: isDark ? '#1e1e1e' : 'white',
           borderRadius: 2,
@@ -80,10 +78,8 @@ function RegisterForm() {
           mx: 'auto'
         }}
       >
-        <Grid container spacing={3}
-
-          item sm={12} justifyContent="center" alignItems="center">
-          <Grid item xs={12} sm={6}>
+        <Grid container spacing={3} justifyContent="center" alignItems="center">
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               name="first"
               label="First Name"
@@ -94,11 +90,10 @@ function RegisterForm() {
               onChange={handleChange}
               value={formDetails.first}
               required
-
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               name="middle"
               label="Middle Name"
@@ -111,7 +106,7 @@ function RegisterForm() {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               name="last"
               label="Last Name"
@@ -125,7 +120,7 @@ function RegisterForm() {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               name="phone"
               label="Phone"
@@ -140,7 +135,7 @@ function RegisterForm() {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               name="email"
               label="Email"
@@ -155,7 +150,7 @@ function RegisterForm() {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               name="password"
               label="Password"
@@ -170,7 +165,7 @@ function RegisterForm() {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               name="url"
               label="Image URL"
@@ -183,7 +178,7 @@ function RegisterForm() {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               name="alt"
               label="Image Alt"
@@ -196,7 +191,7 @@ function RegisterForm() {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               name="state"
               label="State"
@@ -209,7 +204,7 @@ function RegisterForm() {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               name="country"
               label="Country"
@@ -223,7 +218,7 @@ function RegisterForm() {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               name="city"
               label="City"
@@ -237,7 +232,7 @@ function RegisterForm() {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               name="street"
               label="Street"
@@ -251,7 +246,7 @@ function RegisterForm() {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               name="houseNumber"
               label="House Number"
@@ -265,7 +260,7 @@ function RegisterForm() {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               name="zip"
               label="ZIP Code"
@@ -277,34 +272,28 @@ function RegisterForm() {
               value={formDetails.zip}
             />
           </Grid>
-          {/* Checkbox for isBusiness */}
-          <Grid item xs={12} sm={6} justifyContent={"flex-start"} >
+
+          <Grid size={{ xs: 12, sm: 6 }} sx={{ display: 'flex', justifyContent: 'flex-start' }}>
             <FormControlLabel
               control={
                 <Checkbox
                   name="isBusiness"
                   checked={Boolean(formDetails.isBusiness)}
                   onChange={e => {
-                    // console.log('isBusiness checkbox clicked:', e.target.checked);
-                    // console.log('Before handleChange - formDetails.isBusiness:', formDetails.isBusiness);
                     handleChange({
                       target: {
                         name: 'isBusiness',
                         value: e.target.checked
                       }
                     });
-                    // Remove this log since state updates asynchronously
-                    // console.log('After handleChange - formDetails.isBusiness:', formDetails.isBusiness);
                   }}
                   color="primary"
                 />
               }
               label="Signup as business"
-
             />
           </Grid>
         </Grid>
-
       </Form>
     </Container>
 

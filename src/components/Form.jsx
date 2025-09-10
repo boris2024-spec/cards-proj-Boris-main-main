@@ -15,6 +15,7 @@ const Form = ({
   color = "inherit",
   spacing = 1,
   styles = {},
+  hideButtons = false, // Новый пропс для скрытия кнопок
   children,
 }) => {
   const navigate = useNavigate();
@@ -37,36 +38,38 @@ const Form = ({
         {children}
       </Grid>
 
-      <Grid container spacing={1} my={2} direction="row" width="100%" justifyContent="center" alignItems="center">
-        <Grid size={{ xs: 12, sm: 6 }} display="flex" justifyContent="center">
-          <FormButton
-            node="cancel"
-            color="error"
-            component="div"
-            variant="outlined"
-            size="large"
-            onClick={() => navigate(to)}
-          />
+      {!hideButtons && (
+        <Grid container spacing={1} my={2} direction="row" width="100%" justifyContent="center" alignItems="center">
+          <Grid size={{ xs: 12, sm: 6 }} display="flex" justifyContent="center">
+            <FormButton
+              node="cancel"
+              color="error"
+              component="div"
+              variant="outlined"
+              size="large"
+              onClick={() => navigate(to)}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6 }} display="flex" justifyContent="center">
+            <FormButton
+              node={<LoopIcon />}
+              variant="outlined"
+              component="div"
+              size="large"
+              onClick={onReset}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 12 }} display="flex" justifyContent="center">
+            <FormButton
+              node="Submit"
+              onClick={e => { e.preventDefault(); onSubmit(); }}
+              disabled={!validateForm ? false : !validateForm()}
+              size="large"
+              variant="contained"
+            />
+          </Grid>
         </Grid>
-        <Grid size={{ xs: 12, sm: 6 }} display="flex" justifyContent="center">
-          <FormButton
-            node={<LoopIcon />}
-            variant="outlined"
-            component="div"
-            size="large"
-            onClick={onReset}
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 12 }} display="flex" justifyContent="center">
-          <FormButton
-            node="Submit"
-            onClick={e => { e.preventDefault(); onSubmit(); }}
-            disabled={!validateForm ? false : !validateForm()}
-            size="large"
-            variant="contained"
-          />
-        </Grid>
-      </Grid>
+      )}
     </Box>
   );
 };

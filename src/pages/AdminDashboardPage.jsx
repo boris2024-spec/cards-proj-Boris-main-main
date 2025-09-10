@@ -29,6 +29,7 @@ import { useNavigate } from "react-router-dom";
 import { useCurrentUser } from "../users/providers/UserProvider";
 import useAdmin from "../users/hooks/useAdmin";
 import ROUTES from "../routes/routesDict";
+import AdminLockResetForm from "../components/AdminLockResetForm";
 
 export default function AdminDashboardPage() {
     const navigate = useNavigate();
@@ -120,7 +121,7 @@ export default function AdminDashboardPage() {
                                                 display: "flex",
                                                 alignItems: "center",
                                                 justifyContent: "space-between",
-                                                
+
                                             }}
                                         >
                                             <Box>
@@ -203,10 +204,13 @@ export default function AdminDashboardPage() {
                         ))}
                     </Grid>
 
-                    {/* Recent Activity */}
+                    {/* Admin Tools and Recent Activity */}
                     <Grid container spacing={3} sx={{ mt: 2 }}>
-                        <Grid item xs={12}>
-                            <Paper sx={{ p: 3 }}>
+                        <Grid item xs={12} md={6}>
+                            <AdminLockResetForm />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Paper sx={{ p: 3, height: 'fit-content' }}>
                                 <Typography variant="h6" gutterBottom>
                                     Recent Activity
                                 </Typography>

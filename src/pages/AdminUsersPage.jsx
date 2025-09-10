@@ -33,6 +33,7 @@ import {
     CheckCircle,
     Business,
     AdminPanelSettings,
+    LockReset,
 } from "@mui/icons-material";
 import { useCurrentUser } from "../users/providers/UserProvider";
 import { API_BASE_URL } from "../users/services/userApiServicece";
@@ -121,6 +122,27 @@ export default function AdminUsersPage() {
         } catch (error) {
             setError("Error deleting user");
             console.error("Error deleting user:", error);
+        }
+    };
+
+    const handleResetLoginAttempts = async (userEmail) => {
+        if (!window.confirm(`Are you sure you want to reset login attempts for ${userEmail}?`)) {
+            return;
+        }
+
+        try {
+            await axios.patch(`${API_BASE_URL}/users/reset-login-attempts`, {
+                email: userEmail
+            }, {
+                headers: { "x-auth-token": token },
+            });
+
+            setSuccess(`Login attempts reset for ${userEmail}`);
+            // Обновляем список пользователей для отображения актуальной информации
+            fetchUsers();
+        } catch (error) {
+            setError("Error resetting login attempts");
+            console.error("Error resetting login attempts:", error);
         }
     };
 
@@ -376,7 +398,7 @@ export default function AdminUsersPage() {
                                     />
                                 </TableCell>
                                 <TableCell align="center">
-                                    <Box sx={{ display: "flex", gap: 1 }}>
+                                    <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
                                         <IconButton
                                             onClick={() => {
                                                 setSelectedUser(user);
@@ -384,6 +406,7 @@ export default function AdminUsersPage() {
                                             }}
                                             color="primary"
                                             size="small"
+                                            title="Edit user"
                                         >
                                             <Edit />
                                         </IconButton>
@@ -395,10 +418,21 @@ export default function AdminUsersPage() {
                                         >
                                             {user.isBlocked ? "Unblock" : "Block"}
                                         </Button>
+                                        <Button
+                                            onClick={() => handleResetLoginAttempts(user.email)}
+                                            size="small"
+                                            variant="outlined"
+                                            color="info"
+                                            startIcon={<LockReset />}
+                                            title="Reset login attempts"
+                                        >
+                                            Reset
+                                        </Button>
                                         <IconButton
                                             onClick={() => handleDeleteUser(user._id)}
                                             color="error"
                                             size="small"
+                                            title="Delete user"
                                         >
                                             <Delete />
                                         </IconButton>

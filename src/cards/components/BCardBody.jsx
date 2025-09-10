@@ -36,9 +36,7 @@ function BCardBody({ title, subtitle, phone, city, bizNumber }) {
           mb: 2,
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
+          whiteSpace: 'nowrap',
           fontSize: { xs: '0.875rem', sm: '1rem' }
         }}
       >
