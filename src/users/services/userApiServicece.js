@@ -1,6 +1,7 @@
 // Единая точка для базового URL API
 // Не добавляем завершающий слэш, чтобы шаблоны были единообразны: `${API_BASE_URL}/cards`
-export const API_BASE_URL = "http://localhost:3000";
+// export const API_BASE_URL = "http://localhost:3000";
+export const API_BASE_URL = "https://cards-server-boris.onrender.com";
 
 // (Опционально) общий axios инстанс. Пока не используется везде, но готов для постепенной миграции.
 // import axios from 'axios';
