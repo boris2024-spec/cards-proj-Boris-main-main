@@ -38,7 +38,7 @@ import { API_BASE_URL } from "../users/services/userApiServicece";
 import axios from "axios";
 
 export default function AdminCardsPage() {
-    const { token } = useCurrentUser();
+    const { token, user } = useCurrentUser();
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
@@ -69,23 +69,39 @@ export default function AdminCardsPage() {
         }
     };
 
-    const handleCardToggle = async (cardId, field, currentValue) => {
+    // Блокировка карточки
+    const handleBlockCard = async (cardId) => {
         try {
-            const updateData = { [field]: !currentValue };
-            await axios.patch(`${API_BASE_URL}/cards/${cardId}`, updateData, {
+            await axios.patch(`${API_BASE_URL}/cards/${cardId}/block`, {}, {
                 headers: { "x-auth-token": token },
             });
-
             setCards(cards.map(card =>
                 card._id === cardId
-                    ? { ...card, [field]: !currentValue }
+                    ? { ...card, isBlocked: true }
                     : card
             ));
-
-            setSuccess(`Card status updated`);
+            setSuccess("Card заблокирована");
         } catch (error) {
-            setError("Error updating card status");
-            console.error("Error updating card:", error);
+            setError("Ошибка при блокировке карточки");
+            console.error("Ошибка блокировки:", error);
+        }
+    };
+
+    // Разблокировка карточки
+    const handleUnblockCard = async (cardId) => {
+        try {
+            await axios.patch(`${API_BASE_URL}/cards/${cardId}/unblock`, {}, {
+                headers: { "x-auth-token": token },
+            });
+            setCards(cards.map(card =>
+                card._id === cardId
+                    ? { ...card, isBlocked: false }
+                    : card
+            ));
+            setSuccess("Card разблокирована");
+        } catch (error) {
+            setError("Ошибка при разблокировке карточки");
+            console.error("Ошибка разблокировки:", error);
         }
     };
 
@@ -113,6 +129,12 @@ export default function AdminCardsPage() {
             card.subtitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             card.email?.toLowerCase().includes(searchTerm.toLowerCase());
 
+        // Если админ, показываем все карточки, только фильтруем по поиску
+        if (user?.isAdmin) {
+            return matchesSearch;
+        }
+
+        // Для обычных пользователей фильтруем по статусу
         const matchesStatus =
             statusFilter === "all" ||
             (statusFilter === "active" && !card.isBlocked) ||
@@ -254,69 +276,113 @@ export default function AdminCardsPage() {
             <Grid container spacing={3}>
                 {paginatedCards.map((card) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={card._id}>
-                        <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
-                            {card.image?.url && (
-                                <CardMedia
-                                    component="img"
-                                    height="140"
-                                    image={card.image.url}
-                                    alt={card.image.alt}
-                                />
-                            )}
-                            <CardContent sx={{ flexGrow: 1 }}>
-                                <Typography gutterBottom variant="h6" component="div" noWrap>
-                                    {card.title}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary" noWrap>
-                                    {card.subtitle}
-                                </Typography>
-                                <Typography variant="body2" sx={{ mt: 1 }} noWrap>
-                                    {card.email}
-                                </Typography>
-
-                                <Box sx={{ mt: 2, display: "flex", gap: 1, flexWrap: "wrap" }}>
-                                    <Chip
-                                        icon={card.isBlocked ? <Block /> : <CheckCircle />}
-                                        label={card.isBlocked ? "Blocked" : "Active"}
-                                        color={card.isBlocked ? "error" : "success"}
-                                        size="small"
+                        <Box sx={{ position: 'relative' }}>
+                            <Card
+                                sx={{
+                                    height: "100%",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    opacity: card.isBlocked ? 0.5 : 1,
+                                    filter: card.isBlocked ? 'grayscale(0.7)' : 'none',
+                                    pointerEvents: card.isBlocked ? 'auto' : 'auto',
+                                }}
+                            >
+                                {card.image?.url && (
+                                    <CardMedia
+                                        component="img"
+                                        height="140"
+                                        image={card.image.url}
+                                        alt={card.image.alt}
                                     />
-                                    <Chip
-                                        label={`${card.likes?.length || 0} likes`}
-                                        size="small"
-                                        variant="outlined"
-                                    />
-                                </Box>
-                            </CardContent>
+                                )}
+                                <CardContent sx={{ flexGrow: 1 }}>
+                                    <Typography gutterBottom variant="h6" component="div" noWrap>
+                                        {card.title}
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary" noWrap>
+                                        {card.subtitle}
+                                    </Typography>
+                                    <Typography variant="body2" sx={{ mt: 1 }} noWrap>
+                                        {card.email}
+                                    </Typography>
 
-                            <CardActions sx={{ p: 2, pt: 0 }}>
-                                <IconButton
-                                    onClick={() => {
-                                        setSelectedCard(card);
-                                        setDialogOpen(true);
+                                    <Box sx={{ mt: 2, display: "flex", gap: 1, flexWrap: "wrap" }}>
+                                        <Chip
+                                            icon={card.isBlocked ? <Block /> : <CheckCircle />}
+                                            label={card.isBlocked ? "Blocked" : "Active"}
+                                            color={card.isBlocked ? "error" : "success"}
+                                            size="small"
+                                        />
+                                        <Chip
+                                            label={`${card.likes?.length || 0} likes`}
+                                            size="small"
+                                            variant="outlined"
+                                        />
+                                    </Box>
+                                </CardContent>
+
+                                <CardActions sx={{ p: 2, pt: 0 }}>
+                                    <IconButton
+                                        onClick={() => {
+                                            setSelectedCard(card);
+                                            setDialogOpen(true);
+                                        }}
+                                        color="primary"
+                                        size="small"
+                                    >
+                                        <Visibility />
+                                    </IconButton>
+                                    {card.isBlocked ? (
+                                        <Button
+                                            onClick={() => handleUnblockCard(card._id)}
+                                            size="small"
+                                            variant="outlined"
+                                            color="success"
+                                        >
+                                            Unblock
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            onClick={() => handleBlockCard(card._id)}
+                                            size="small"
+                                            variant="outlined"
+                                            color="warning"
+                                        >
+                                            Block
+                                        </Button>
+                                    )}
+                                    <IconButton
+                                        onClick={() => handleDeleteCard(card._id)}
+                                        color="error"
+                                        size="small"
+                                    >
+                                        <Delete />
+                                    </IconButton>
+                                </CardActions>
+                            </Card>
+                            {card.isBlocked && (
+                                <Box
+                                    sx={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        width: '100%',
+                                        height: '100%',
+                                        bgcolor: 'rgba(255,0,0,0.15)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        zIndex: 2,
+                                        pointerEvents: 'none',
+                                        borderRadius: 2,
                                     }}
-                                    color="primary"
-                                    size="small"
                                 >
-                                    <Visibility />
-                                </IconButton>
-                                <Button
-                                    onClick={() => handleCardToggle(card._id, "isBlocked", card.isBlocked)}
-                                    size="small"
-                                    variant="outlined"
-                                    color={card.isBlocked ? "success" : "warning"}
-                                >
-                                    {card.isBlocked ? "Unblock" : "Block"}
-                                </Button>
-                                <IconButton
-                                    onClick={() => handleDeleteCard(card._id)}
-                                    color="error"
-                                    size="small"
-                                >
-                                    <Delete />
-                                </IconButton>
-                            </CardActions>
-                        </Card>
+                                    <Typography variant="h5" color="error" sx={{ fontWeight: 'bold', textShadow: '0 0 6px #fff' }}>
+                                        ЗАБЛОКИРОВАНО
+                                    </Typography>
+                                </Box>
+                            )}
+                        </Box>
                     </Grid>
                 ))}
             </Grid>
