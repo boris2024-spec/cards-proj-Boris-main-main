@@ -1,4 +1,4 @@
-// Единая точка для базового URL API
+// Single source for the API base URL
 export const API_BASE_URL = "http://localhost:3000";
 // export const API_BASE_URL = "https://cards-server-boris.onrender.com";
 

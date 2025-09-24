@@ -1,79 +1,79 @@
-# Тестирование функциональности блокировки пользователей при логине
+# Testing blocked-user behavior on login
 
-## Что было реализовано
+## What was implemented
 
-### 1. Улучшенная обработка ошибок при логине
-- В файле `src/users/components/LoginForm.jsx` добавлена специфичная обработка ошибок
-- Теперь показываются разные сообщения в зависимости от типа ошибки:
-  - Блокировка пользователя: "Пользователь заблокирован. Обратитесь к администратору."
-  - Неверные данные: "Неверный email или пароль"
-  - Общая ошибка: "Ошибка входа в систему"
+### 1. Improved error handling on login
+- The file `src/users/components/LoginForm.jsx` includes specific error handling
+- Now different messages are shown depending on the error type:
+  - Blocked user: "User is blocked. Please contact an administrator."
+  - Invalid credentials: "Invalid email or password"
+  - Generic error: "Login error"
 
-### 2. Использование современного UI для уведомлений
-- Заменены `alert()` на красивые уведомления через `useSnack`
-- Добавлено уведомление об успешном входе
+### 2. Modern UI notifications
+- Replaced `alert()` calls with nicer notifications via `useSnack`
+- Added a notification for successful login
 
-### 3. Глобальная обработка блокировки
-- Создан axios interceptor (`src/services/axiosInterceptor.js`)
-- Автоматически обрабатывает случаи, когда пользователь блокируется во время активной сессии
-- При обнаружении блокировки автоматически:
-  - Удаляет токен из localStorage
-  - Перенаправляет на страницу логина
-  - Показывает уведомление о блокировке
+### 3. Global block handling
+- Created an axios interceptor (`src/services/axiosInterceptor.js`)
+- Automatically handles cases where a user becomes blocked during an active session
+- On detected blockage the interceptor will:
+  - Remove the token from localStorage
+  - Redirect to the login page
+  - Show a blocked notification
 
-## Как протестировать
+## How to test
 
-### Сценарий 1: Блокировка при логине
-1. Откройте админ-панель (http://localhost:5174/admin/users)
-2. Авторизуйтесь как администратор
-3. Найдите тестового пользователя
-4. Нажмите кнопку "Block" для блокировки
-5. Выйдите из системы
-6. Попробуйте войти под заблокированным пользователем
-7. **Ожидаемый результат**: Появится красное уведомление "Пользователь заблокирован. Обратитесь к администратору."
+### Scenario 1: Blocked on login
+1. Open the admin panel (http://localhost:5174/admin/users)
+2. Log in as an administrator
+3. Find a test user
+4. Click the "Block" button to block the user
+5. Log out
+6. Try to log in with the blocked user
+7. **Expected result**: A red notification appears: "User is blocked. Please contact an administrator."
 
-### Сценарий 2: Блокировка во время активной сессии
-1. Войдите под тестовым пользователем
-2. В другой вкладке или браузере войдите как администратор
-3. Заблокируйте того же пользователя в админ-панели
-4. Вернитесь к первой вкладке с заблокированным пользователем
-5. Попробуйте выполнить любое действие (переход по страницам, API запросы)
-6. **Ожидаемый результат**: Пользователь будет автоматически разлогинен и перенаправлен на страницу логина
+### Scenario 2: Block while active
+1. Log in as the test user
+2. In another tab or browser, log in as an administrator
+3. Block the same user from the admin panel
+4. Return to the first tab with the test user
+5. Try to perform any action (navigate pages, trigger API calls)
+6. **Expected result**: The user will be automatically logged out and redirected to the login page
 
-### Сценарий 3: Разблокировка
-1. Разблокируйте пользователя в админ-панели (кнопка "Unblock")
-2. Пользователь снова сможет входить в систему
+### Scenario 3: Unblock
+1. Unblock the user from the admin panel ("Unblock" button)
+2. The user can log in again
 
-## Файлы, которые были изменены
+## Files changed
 
 1. **src/users/components/LoginForm.jsx**
-   - Улучшенная обработка ошибок при логине
-   - Использование уведомлений вместо alert
+   - Improved login error handling
+   - Replaced alerts with notifications
 
-2. **src/services/axiosInterceptor.js** (новый файл)
-   - Глобальная обработка ошибок блокировки
-   - Автоматический logout при блокировке
+2. **src/services/axiosInterceptor.js** (new file)
+   - Global handling of block errors
+   - Automatic logout on block
 
 3. **src/App.jsx**
-   - Подключение axios interceptor
+   - Registered the axios interceptor
 
 4. **src/users/providers/UserProvider.jsx**
-   - Добавлен импорт removeToken
+   - Added import for removeToken
 
-## Техническая информация
+## Technical details
 
-### Обработка ошибок сервера
-Система ожидает следующие типы ответов от сервера:
+### Server error format
+The system expects the following response shapes from the server:
 
 ```json
-// При блокировке пользователя
+// When a user is blocked
 {
   "error": {
-    "message": "User is blocked" // или содержит "blocked"/"заблокирован"
+    "message": "User is blocked" // or contains "blocked"
   }
 }
 
-// При неверных данных логина
+// When credentials are invalid
 {
   "error": {
     "message": "Invalid email or password"
@@ -81,23 +81,23 @@
 }
 ```
 
-### HTTP статус коды
-- **403** - Запрещено (используется для блокированных пользователей)
-- **401** - Неавторизован (неверные данные или недействительный токен)
-- **400** - Неверный запрос
+### HTTP status codes
+- **403** - Forbidden (used for blocked users)
+- **401** - Unauthorized (invalid credentials or token)
+- **400** - Bad request
 
-## Дополнительные улучшения
+## Additional improvements
 
-Для более полной функциональности можно добавить:
+For a more complete solution you can add:
 
-1. **Периодическая проверка статуса** - каждые 5-10 минут проверять, не заблокирован ли пользователь
-2. **WebSocket уведомления** - мгновенное уведомление о блокировке
-3. **Логирование действий** - запись в логи всех попыток входа заблокированных пользователей
-4. **Время блокировки** - показывать дату и время блокировки
-5. **Причина блокировки** - поле для указания причины блокировки администратором
+1. **Periodic status check** - poll the server every 5-10 minutes to verify the user is not blocked
+2. **WebSocket notifications** - instant notifications about blocking events
+3. **Action logging** - record attempts of blocked users to log in
+4. **Block timestamp** - show the date/time of the block
+5. **Block reason** - a field where the admin can set a reason for the block
 
-## Безопасность
+## Security
 
-- Токены автоматически удаляются при блокировке
-- Система не позволяет заблокированным пользователям выполнять действия
-- Все проверки дублируются на backend для безопасности
+- Tokens are automatically removed when a user is blocked
+- Blocked users are prevented from performing actions
+- All checks must be duplicated on the backend for security

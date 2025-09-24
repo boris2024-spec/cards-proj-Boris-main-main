@@ -1,74 +1,75 @@
-# Функциональность блокировки пользователей
 
-## Описание изменений
+# User Blocking Functionality
 
-Была добавлена улучшенная функциональность блокировки пользователей в административной панели с использованием специальных API endpoints.
+## Description of Changes
 
-### Основные изменения:
+Enhanced user blocking functionality has been added to the admin panel using dedicated API endpoints.
 
-1. **Исправлены API endpoints для блокировки**
-   - Используются специальные endpoints: `/users/:id/block` и `/users/:id/unblock`
-   - Блокировка автоматически устанавливает `isBusiness: false` на бэкенде
+### Main Changes:
 
-2. **Обновленные файлы:**
-   - `src/pages/AdminUsersPage.jsx` - основная логика блокировки в UI
-   - `src/users/hooks/useAdmin.js` - хук для административных операций
+1. **Fixed API endpoints for blocking**
+   - Special endpoints are used: `/users/:id/block` and `/users/:id/unblock`
+   - Blocking automatically sets `isBusiness: false` on the backend
+
+2. **Updated files:**
+   - `src/pages/AdminUsersPage.jsx` – main blocking logic in the UI
+   - `src/users/hooks/useAdmin.js` – hook for admin operations
 
 ### API Endpoints:
 
-#### Блокировка пользователя:
+#### Block user:
 ```http
 PATCH /users/:id/block
 Headers: x-auth-token: <admin_token>
 ```
-Ответ: обновленный объект пользователя с `isBlocked: true` и `isBusiness: false`
+Response: updated user object with `isBlocked: true` and `isBusiness: false`
 
-#### Разблокировка пользователя:
+#### Unblock user:
 ```http
-PATCH /users/:id/unblock  
+PATCH /users/:id/unblock
 Headers: x-auth-token: <admin_token>
 ```
-Ответ: обновленный объект пользователя с `isBlocked: false`
+Response: updated user object with `isBlocked: false`
 
-### Как это работает:
+### How it works:
 
-#### В таблице пользователей:
-- Кнопка "Block" вызывает функцию `handleUserToggle`
-- При блокировке пользователя отправляется `PATCH /users/:id/block`
-- При разблокировке отправляется `PATCH /users/:id/unblock`
-- Бэкенд автоматически управляет полем `isBusiness`
+#### In the user table:
+- The "Block" button calls the `handleUserToggle` function
+- When blocking a user, `PATCH /users/:id/block` is sent
+- When unblocking, `PATCH /users/:id/unblock` is sent
+- Backend automatically manages the `isBusiness` field
 
-#### В модальном окне редактирования:
-- Добавлен переключатель "Blocked" 
-- При сохранении сначала обновляются основные данные через `PUT /users/:id`
-- Затем, если изменился статус блокировки, отправляется соответствующий PATCH запрос
+#### In the edit modal:
+- Added "Blocked" toggle
+- On save, main data is updated via `PUT /users/:id`
+- Then, if block status changed, the corresponding PATCH request is sent
 
-### Логика безопасности:
-- Только администраторы могут блокировать/разблокировать пользователей
-- Заблокированный пользователь автоматически теряет статус бизнес-аккаунта
-- При разблокировке статус бизнес-аккаунта можно установить заново вручную
-- Все изменения логируются в консоль для отладки
+### Security Logic:
+- Only administrators can block/unblock users
+- Blocked users automatically lose business account status
+- After unblocking, business status can be manually set again
+- All changes are logged to the console for debugging
 
-### Тестирование:
+### Testing:
 
-#### Автоматическое тестирование:
-1. Запустите тестовый скрипт: `test-frontend-block.js`
-2. Выполните в консоли браузера: `testFrontendBlockFunctionality()`
+#### Automated testing:
+1. Run the test script: `test-frontend-block.js`
+2. Execute in browser console: `testFrontendBlockFunctionality()`
 
-#### Ручное тестирование в UI:
-1. Авторизуйтесь как администратор
-2. Перейдите на страницу "Admin Users" (/admin/users)
-3. Найдите пользователя и нажмите кнопку "Block"
-4. Проверьте, что статус изменился на "Blocked"
-5. Нажмите "Unblock" для разблокировки
+#### Manual UI testing:
+1. Log in as administrator
+2. Go to "Admin Users" page (/admin/users)
+3. Find a user and click the "Block" button
+4. Check that the status changes to "Blocked"
+5. Click "Unblock" to unblock
 
-### Интерфейс:
-- Заблокированные пользователи отображаются с красным чипом "Blocked"
-- Активные пользователи отображаются с зеленым чипом "Active"  
-- Кнопка блокировки меняет текст с "Block" на "Unblock" и цвет
-- Сообщения об успехе/ошибке отображаются в виде уведомлений
+### Interface:
+- Blocked users are shown with a red "Blocked" chip
+- Active users are shown with a green "Active" chip
+- The block button changes text from "Block" to "Unblock" and color
+- Success/error messages are shown as notifications
 
-### Обработка ошибок:
-- При ошибке 404: проверьте правильность API endpoints
-- При ошибке 403: проверьте права администратора
-- При ошибке сети: проверьте подключение к серверу
+### Error Handling:
+- On 404 error: check API endpoint correctness
+- On 403 error: check admin rights
+- On network error: check server connection

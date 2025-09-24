@@ -1,62 +1,62 @@
-# Инструкция по тестированию функциональности блокировки пользователей
+# Testing instructions for user blocking functionality
 
-## Краткая инструкция для тестирования
+## Quick testing guide
 
-### 🚀 Быстрый тест в UI:
+### 🚀 Quick UI test:
 
-1. **Откройте приложение**: http://localhost:5174
-2. **Авторизуйтесь как администратор**
-3. **Перейдите в админ-панель**: Нажмите на "Admin Dashboard" в меню
-4. **Откройте управление пользователями**: Нажмите "User Management"
-5. **Найдите пользователя** (не администратора) в таблице
-6. **Нажмите кнопку "Block"** - пользователь должен заблокироваться
-7. **Проверьте статус**: статус должен стать "Blocked" (красный чип)
-8. **Нажмите кнопку "Unblock"** - пользователь должен разблокироваться
+1. **Open the application**: http://localhost:5174
+2. **Log in as an administrator**
+3. **Go to Admin Dashboard**: Click "Admin Dashboard" in the menu
+4. **Open User Management**: Click "User Management"
+5. **Find a user** (not an admin) in the table
+6. **Click the "Block" button** - the user should be blocked
+7. **Verify status**: the status should become "Blocked" (red chip)
+8. **Click the "Unblock" button** - the user should be unblocked
 
-### 🔧 Автоматический тест через консоль браузера:
+### 🔧 Automatic test via browser console:
 
-1. **Откройте DevTools** (F12)
-2. **Перейдите во вкладку Console**
-3. **Загрузите тестовый скрипт**:
+1. **Open DevTools** (F12)
+2. **Go to the Console tab**
+3. **Load the test script**:
    ```javascript
-   // Скопируйте содержимое файла test-frontend-block.js и вставьте в консоль
+   // Copy the contents of test-frontend-block.js and paste into the console
    ```
-4. **Запустите тест**:
+4. **Run the test**:
    ```javascript
    testFrontendBlockFunctionality()
    ```
 
-### ✅ Ожидаемое поведение:
+### ✅ Expected behavior:
 
-- **При блокировке**:
-  - Статус пользователя меняется на "Blocked"
-  - Если пользователь был бизнес-аккаунтом, статус "Business" убирается
-  - Кнопка меняется с "Block" на "Unblock"
-  - Отображается сообщение успеха
+- When blocking:
+  - User status changes to "Blocked"
+  - If the user had a "Business" role, the "Business" status is removed
+  - The button switches from "Block" to "Unblock"
+  - A success notification is shown
 
-- **При разблокировке**:
-  - Статус пользователя меняется на "Active"
-  - Кнопка меняется с "Unblock" на "Block"
-  - Отображается сообщение успеха
+- When unblocking:
+  - User status changes to "Active"
+  - The button switches from "Unblock" to "Block"
+  - A success notification is shown
 
-### 🔍 Что проверить:
+### 🔍 What to verify:
 
-1. **Визуальные изменения**: Чипы статуса должны менять цвет и текст
-2. **Кнопки**: Текст и цвет кнопок должны обновляться
-3. **Сообщения**: Должны появляться уведомления об успехе/ошибке
-4. **Бизнес-статус**: При блокировке статус "Business" должен исчезать
-5. **Права доступа**: Только администраторы могут блокировать пользователей
+1. Visual changes: status chips should change color and text
+2. Buttons: text and colors should update correctly
+3. Notifications: success/error messages should appear
+4. Business role: when blocked, the "Business" status should be removed
+5. Permissions: only admins should be able to block/unblock users
 
-### ❌ Возможные ошибки:
+### ❌ Possible errors:
 
-- **404 Not Found**: Проверьте, что сервер запущен на порту 3000
-- **403 Forbidden**: Убедитесь, что авторизованы как администратор
-- **Network Error**: Проверьте подключение к серверу
+- **404 Not Found**: Make sure the backend server is running on port 3000
+- **403 Forbidden**: Ensure you are logged in as an administrator
+- **Network Error**: Check your connection to the server
 
-### 📝 Логи для отладки:
+### 📝 Debug logs:
 
-Все действия логируются в консоль браузера. Открывайте DevTools для просмотра подробной информации о запросах и ответах.
+All actions are logged to the browser console. Open DevTools to inspect network requests and responses.
 
 ---
 
-**Готово!** Функциональность блокировки пользователей теперь работает корректно с правильными API endpoints.
+**Done!** The user blocking functionality can be tested using the steps above.

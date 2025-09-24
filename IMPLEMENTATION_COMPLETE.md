@@ -1,43 +1,43 @@
-# 🎉 Реализация Блокировки Пользователей - ЗАВЕРШЕНО
+# 🎉 User Blocking Implementation - COMPLETE
 
-## 📊 Сводка изменений
+## 📊 Summary of changes
 
-### ✅ Обновленные файлы (5)
+### ✅ Updated files (5)
 
-1. **`src/users/components/LoginForm.jsx`** - Основная форма входа
-   - Добавлена обработка кода 423 (блокировка)
-   - Реализован таймер обратного отсчета
-   - Добавлены индикаторы попыток входа
-   - Предупреждения о приближающейся блокировке
+1. **`src/users/components/LoginForm.jsx`** - Main login form
+   - Added handling for HTTP 423 (locked)
+   - Implemented countdown timer
+   - Added login attempt indicators
+   - Warnings for impending lock
 
-2. **`src/components/Form.jsx`** - Базовый компонент формы
-   - Добавлен пропс `hideButtons` для кастомизации
-   - Условное отображение кнопок
+2. **`src/components/Form.jsx`** - Base form component
+   - Added `hideButtons` prop for customization
+   - Conditional rendering of action buttons
 
-3. **`src/pages/AdminUsersPage.jsx`** - Панель управления пользователями
-   - Кнопка сброса попыток входа для каждого пользователя
-   - Функция `handleResetLoginAttempts`
+3. **`src/pages/AdminUsersPage.jsx`** - User management panel
+   - Reset login attempts button for each user
+   - `handleResetLoginAttempts` function
 
 4. **`src/components/AdminLockResetForm.jsx`** - NEW FILE
-   - Отдельная форма для сброса блокировок
-   - Валидация email
-   - Обработка ошибок API
+   - Separate form to reset locks
+   - Email validation
+   - API error handling
 
-5. **`src/pages/AdminDashboardPage.jsx`** - Админская панель
-   - Интеграция формы сброса блокировок
-   - Улучшенный layout
+5. **`src/pages/AdminDashboardPage.jsx`** - Admin dashboard
+   - Integrated lock reset form
+   - Improved layout
 
-### ✅ Новые файлы (3)
+### ✅ New files (3)
 
-1. **`test-user-blocking.js`** - Автоматическое тестирование
-2. **`FRONTEND_BLOCK_IMPLEMENTATION.md`** - Техническая документация  
-3. **`TESTING_MANUAL.md`** - Инструкция по тестированию
+1. **`test-user-blocking.js`** - Automated tests
+2. **`FRONTEND_BLOCK_IMPLEMENTATION.md`** - Technical documentation  
+3. **`TESTING_MANUAL.md`** - Manual testing guide
 
-## 🔧 Технические особенности
+## 🔧 Technical details
 
-### Обработка API ответов
+### API response handling
 ```javascript
-// 423 Locked - Аккаунт заблокирован
+// 423 Locked - account is blocked
 if (status === 423) {
   setIsBlocked(true);
   if (data.blockedUntil) {
@@ -45,7 +45,7 @@ if (status === 423) {
   }
 }
 
-// 401 Unauthorized - Показ оставшихся попыток
+// 401 Unauthorized - show remaining attempts
 if (status === 401) {
   const remainingMatch = errorMessage.match(/(\d+) attempts remaining/);
   if (remainingMatch) {
@@ -54,16 +54,16 @@ if (status === 401) {
 }
 ```
 
-### Таймер с автообновлением
+### Auto-updating countdown
 ```javascript
 const startCountdown = (blockedUntil) => {
   const updateCountdown = () => {
     const timeLeft = blockedUntil - new Date();
     if (timeLeft <= 0) {
-      setIsBlocked(false); // Автоматическая разблокировка
+      setIsBlocked(false); // Automatic unblock
       return;
     }
-    setBlockCountdown(`🔒 Разблокировка через: ${formatTime(timeLeft)}`);
+    setBlockCountdown(`🔒 Unblocks in: ${formatTime(timeLeft)}`);
   };
   
   const interval = setInterval(updateCountdown, 1000);
@@ -71,9 +71,9 @@ const startCountdown = (blockedUntil) => {
 };
 ```
 
-### Админские функции
+### Admin functions
 ```javascript
-// Сброс попыток входа
+// Reset login attempts
 const handleResetLoginAttempts = async (userEmail) => {
   await axios.patch(`${API_BASE_URL}/users/reset-login-attempts`, {
     email: userEmail
@@ -83,97 +83,97 @@ const handleResetLoginAttempts = async (userEmail) => {
 };
 ```
 
-## 🎨 UI/UX элементы
+## 🎨 UI/UX elements
 
-### Индикатор попыток
-- **Точки**: Зеленые/красные точки показывают оставшиеся попытки
-- **Прогресс-бар**: Визуальный индикатор от 3 до 0 попыток
-- **Числовой счетчик**: "Осталось попыток: 2"
+### Attempts indicator
+- Dots: Green/red dots show remaining attempts
+- Progress bar: Visual indicator from 3 to 0 attempts
+- Numeric counter: "Attempts left: 2"
 
-### Предупреждения
-- **Желтое предупреждение**: После 2-й неудачной попытки
-- **Красное сообщение**: При блокировке аккаунта
-- **Таймер**: Обратный отсчет до разблокировки
+### Warnings
+- Yellow warning: after the 2nd failed attempt
+- Red message: when the account is blocked
+- Timer: countdown until unblock
 
-### Заблокированное состояние
-- **Отключенные поля**: Email и пароль недоступны
-- **Заблокированная кнопка**: "🔒 Аккаунт заблокирован"
-- **Серый цвет**: Визуальная индикация недоступности
+### Blocked state
+- Disabled fields: email and password inputs are disabled
+- Blocked button: "🔒 Account is blocked"
+- Greyed-out styling: visual indication of unavailability
 
-## 🧪 Готовое тестирование
+## 🧪 Testing
 
-### Автоматические тесты
+### Automated tests
 ```javascript
-// В консоли браузера
-runAllTests(); // Полное тестирование
-testUserBlocking(); // Только блокировка
-testAdminReset(token, email); // Сброс админом
+// In the browser console
+runAllTests(); // Full test suite
+testUserBlocking(); // Only blocking tests
+testAdminReset(token, email); // Admin reset
 ```
 
-### Ручное тестирование
-1. 3 неудачные попытки входа → блокировка
-2. Проверка UI элементов
-3. Тест админских функций
-4. Автоматическая разблокировка
+### Manual testing
+1. 3 failed login attempts → account blocked
+2. Verify UI elements
+3. Test admin functions
+4. Automatic unblock
 
-## 🚀 Готово к использованию
+## 🚀 Ready to use
 
-### Для пользователей:
-- ✅ Интуитивные предупреждения
-- ✅ Четкие сообщения о блокировке
-- ✅ Таймер разблокировки
-- ✅ Responsive дизайн
+### For users:
+- ✅ Intuitive warnings
+- ✅ Clear blocking messages
+- ✅ Unblock countdown
+- ✅ Responsive design
 
-### Для администраторов:
-- ✅ Кнопки сброса в панели пользователей
-- ✅ Отдельная форма для быстрого сброса
-- ✅ Подтверждения всех действий
-- ✅ Уведомления об успехе/ошибке
+### For administrators:
+- ✅ Reset buttons in the users panel
+- ✅ Separate form for quick resets
+- ✅ Confirmations for all actions
+- ✅ Success/error notifications
 
-### Для разработчиков:
-- ✅ Чистый, документированный код
-- ✅ Автоматические тесты
-- ✅ Обработка всех edge cases
+### For developers:
+- ✅ Clean, documented code
+- ✅ Automated tests
+- ✅ Edge cases covered
 - ✅ Production-ready
 
-## 🌐 Запуск приложения
+## 🌐 Running the app
 
 ```bash
-# Фронтенд
+# Frontend
 npm run dev
 # ➜ Local: http://localhost:5174/
 
-# Бэкенд (должен быть запущен отдельно)
+# Backend (should run separately)
 # ➜ API: http://localhost:3000
 ```
 
-## 📋 Финальный чек-лист
+## 📋 Final checklist
 
-- [x] ✅ Блокировка после 3 попыток
-- [x] ✅ Отображение оставшихся попыток  
-- [x] ✅ Предупреждения пользователя
-- [x] ✅ Таймер обратного отсчета
-- [x] ✅ Заблокированный интерфейс
-- [x] ✅ Админская кнопка сброса
-- [x] ✅ Отдельная форма сброса
-- [x] ✅ Автоматические тесты
-- [x] ✅ Документация
-- [x] ✅ Responsive дизайн
+- [x] ✅ Block after 3 attempts
+- [x] ✅ Show remaining attempts  
+- [x] ✅ User warnings
+- [x] ✅ Countdown timer
+- [x] ✅ Blocked UI
+- [x] ✅ Admin reset button
+- [x] ✅ Separate reset form
+- [x] ✅ Automated tests
+- [x] ✅ Documentation
+- [x] ✅ Responsive design
 
-## 🎯 Результат
+## 🎯 Result
 
-Полностью функциональная система блокировки пользователей с современным UI/UX, административными инструментами и автоматическим тестированием. Готова к развертыванию в продакшене! 
+Fully functional user blocking system with modern UI/UX, admin tools and automated tests. Ready for production deployment! 
 
-**Время разработки**: ~30 минут  
-**Покрытие функциональности**: 100%  
-**Готовность к продакшену**: ✅
+**Development time**: ~30 minutes  
+**Feature coverage**: 100%  
+**Production readiness**: ✅
 
 ---
 
-## 🔗 Быстрые ссылки
+## 🔗 Quick links
 
-- **Тестирование**: [TESTING_MANUAL.md](./TESTING_MANUAL.md)
-- **Техническая документация**: [FRONTEND_BLOCK_IMPLEMENTATION.md](./FRONTEND_BLOCK_IMPLEMENTATION.md)
-- **Автотесты**: [test-user-blocking.js](./test-user-blocking.js)
+- **Testing**: [TESTING_MANUAL.md](./TESTING_MANUAL.md)
+- **Technical docs**: [FRONTEND_BLOCK_IMPLEMENTATION.md](./FRONTEND_BLOCK_IMPLEMENTATION.md)
+- **Auto tests**: [test-user-blocking.js](./test-user-blocking.js)
 
-**Приложение готово! 🚀**
+**The app is ready! 🚀**

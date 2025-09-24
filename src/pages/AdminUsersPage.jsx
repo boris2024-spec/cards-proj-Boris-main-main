@@ -74,26 +74,26 @@ export default function AdminUsersPage() {
         try {
             let response;
 
-            // Специальная обработка для блокировки/разблокировки
+            // Special handling for block/unblock actions
             if (field === "isBlocked") {
                 const endpoint = !currentValue ? "block" : "unblock";
                 response = await axios.patch(`${API_BASE_URL}/users/${userId}/${endpoint}`, {}, {
                     headers: { "x-auth-token": token },
                 });
             } else {
-                // Для других полей используем обычный PATCH
+                // For other fields use a standard PATCH
                 const updateData = { [field]: !currentValue };
                 response = await axios.patch(`${API_BASE_URL}/users/${userId}`, updateData, {
                     headers: { "x-auth-token": token },
                 });
             }
 
-            // Обновляем состояние с данными из ответа сервера
+            // Update state with data returned from the server
             setUsers(users.map(user =>
                 user._id === userId ? response.data : user
             ));
 
-            // Улучшенное сообщение об успехе
+            // Improved success messages
             if (field === "isBlocked" && !currentValue) {
                 setSuccess("User blocked and business status removed");
             } else if (field === "isBlocked" && currentValue) {
@@ -138,7 +138,7 @@ export default function AdminUsersPage() {
             });
 
             setSuccess(`Login attempts reset for ${userEmail}`);
-            // Обновляем список пользователей для отображения актуальной информации
+            // Refresh the user list to display current data
             fetchUsers();
         } catch (error) {
             setError("Error resetting login attempts");
@@ -175,17 +175,17 @@ export default function AdminUsersPage() {
 
         const handleSave = async () => {
             try {
-                // Сначала обновляем основные данные пользователя
+                // First update the main user data
                 const updatedUser = await axios.put(`${API_BASE_URL}/users/${user._id}`, {
                     ...editUser,
-                    isBlocked: undefined // Исключаем isBlocked из основного обновления
+                    isBlocked: undefined // Exclude isBlocked from the main update
                 }, {
                     headers: { "x-auth-token": token },
                 });
 
                 let finalUser = updatedUser.data;
 
-                // Если статус блокировки изменился, обрабатываем его отдельно
+                // If block status changed, handle it separately
                 if (editUser.isBlocked !== user.isBlocked) {
                     const endpoint = editUser.isBlocked ? "block" : "unblock";
                     const blockResponse = await axios.patch(
@@ -268,7 +268,7 @@ export default function AdminUsersPage() {
                                         const isBlocked = e.target.checked;
                                         const updatedUser = { ...editUser, isBlocked };
 
-                                        // При блокировке убираем статус бизнес-пользователя
+                                        // When blocking, remove business account status
                                         if (isBlocked) {
                                             updatedUser.isBusiness = false;
                                         }

@@ -1,69 +1,69 @@
-# Реализация фильтрации заблокированных карточек
 
-## Что было сделано
+# Blocked Cards Filtering Implementation
 
-Реализована функциональность скрытия заблокированных карточек с главной страницы для всех пользователей.
+## What Was Done
 
-### Изменения в коде
+Implemented functionality to hide blocked cards from the main page for all users.
 
-**Файл: `src/pages/CardsPage.jsx`**
+### Code Changes
 
-1. **Упрощена логика получения карточек**: Убрана сложная логика получения информации о заблокированных админах, так как API не возвращает информацию о владельце карточки.
+**File: `src/pages/CardsPage.jsx`**
 
-2. **Добавлена фильтрация заблокированных карточек**: Все карточки с `isBlocked: true` исключаются из отображения на главной странице.
+1. **Simplified card fetching logic**: Removed complex logic for fetching blocked admin info, since the API does not return card owner info.
+2. **Added filtering of blocked cards**: All cards with `isBlocked: true` are excluded from display on the main page.
 
-### Ключевые изменения
+### Key Change
 
 ```javascript
-// Фильтруем заблокированные карточки - не показываем их обычным пользователям
+// Filter out blocked cards – do not show them to regular users
 allCards = allCards.filter(card => !card.isBlocked);
 ```
 
-### Преимущества реализованного решения
+### Advantages of the Solution
 
-1. **Простота и надежность**: Фильтрация основана на простом поле `isBlocked` в данных карточки
-2. **Универсальность**: Работает для карточек любых пользователей, не только админов
-3. **Безопасность**: Заблокированные карточки не отображаются ни при каких условиях
-4. **Производительность**: Минимальное влияние на производительность
+1. **Simplicity and reliability**: Filtering is based on the simple `isBlocked` field in card data
+2. **Universality**: Works for cards of any user, not just admins
+3. **Security**: Blocked cards are never shown under any circumstances
+4. **Performance**: Minimal impact on performance
 
-### Логика работы
+### How It Works
 
-1. Приложение получает все карточки через API `/cards`
-2. Из полученного списка исключаются все карточки с `isBlocked: true`
-3. Отфильтрованный список отображается пользователю
-4. Заблокированные карточки остаются в системе, но скрыты от всех пользователей
+1. The app fetches all cards via the `/cards` API
+2. All cards with `isBlocked: true` are excluded from the list
+3. The filtered list is displayed to the user
+4. Blocked cards remain in the system but are hidden from all users
 
-### Как протестировать
+### How to Test
 
-1. Откройте главную страницу приложения
-2. Запомните количество отображаемых карточек
-3. Войдите в админ-панель как администратор
-4. Заблокируйте любую карточку (установите `isBlocked: true`)
-5. Вернитесь на главную страницу
-6. Убедитесь, что заблокированная карточка больше не отображается
+1. Open the main page of the app
+2. Note the number of displayed cards
+3. Log in to the admin panel as administrator
+4. Block any card (set `isBlocked: true`)
+5. Return to the main page
+6. Make sure the blocked card is no longer displayed
 
-### Альтернативный способ тестирования
+### Alternative Testing Method
 
-Можно использовать тестовый скрипт `test-block-cards-visibility.js`:
+You can use the test script `test-block-cards-visibility.js`:
 
 ```javascript
-// В консоли браузера на главной странице
+// In the browser console on the main page
 testBlockedCardsVisibility();
 ```
 
-### Дополнительные возможности
+### Additional Features
 
-Для администраторов заблокированные карточки по-прежнему доступны через:
-- Административную панель (`/admin/cards`)
-- Страницу управления карточками
+Blocked cards are still available to administrators via:
+- The admin panel (`/admin/cards`)
+- Card management page
 
-### Техническая информация
+### Technical Info
 
-- **Тип изменения**: Клиентская фильтрация данных
-- **Совместимость**: Полная совместимость с существующим API
-- **Влияние на производительность**: Минимальное
-- **Безопасность**: Высокая (данные фильтруются на клиенте, но логика блокировки контролируется сервером)
+- **Change type**: Client-side data filtering
+- **Compatibility**: Fully compatible with existing API
+- **Performance impact**: Minimal
+- **Security**: High (data is filtered on the client, but blocking logic is controlled by the server)
 
-## Заключение
+## Conclusion
 
-Функциональность успешно реализована и готова к использованию. Заблокированные карточки больше не отображаются на главной странице, что соответствует требованиям задачи.
+The functionality is successfully implemented and ready for use. Blocked cards are no longer shown on the main page, meeting the task requirements.

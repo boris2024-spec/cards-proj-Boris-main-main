@@ -1,9 +1,9 @@
-// Тестовый файл для проверки функциональности блокировки пользователей
-// Запускать в браузерной консоли для тестирования API
+// Test script for verifying user blocking functionality
+// Run in the browser console to test the API
 
 const API_BASE_URL = 'http://localhost:3000';
 
-// Функция для тестирования блокировки пользователей
+// Function to test user blocking
 const testUserBlocking = async () => {
     console.log('🧪 Starting user blocking tests...');
 
@@ -13,7 +13,7 @@ const testUserBlocking = async () => {
     };
 
     try {
-        // Тест 1: Первая неудачная попытка
+        // Test 1: First failed attempt
         console.log('\n1️⃣ Testing first failed login attempt...');
         let response = await fetch(`${API_BASE_URL}/users/login`, {
             method: 'POST',
@@ -29,7 +29,7 @@ const testUserBlocking = async () => {
             console.log('✅ First attempt correctly returned 401');
         }
 
-        // Тест 2: Вторая неудачная попытка
+        // Test 2: Second failed attempt
         console.log('\n2️⃣ Testing second failed login attempt...');
         response = await fetch(`${API_BASE_URL}/users/login`, {
             method: 'POST',
@@ -45,7 +45,7 @@ const testUserBlocking = async () => {
             console.log('✅ Second attempt correctly shows remaining attempts');
         }
 
-        // Тест 3: Третья неудачная попытка - должна заблокировать
+        // Test 3: Third failed attempt - should block the user
         console.log('\n3️⃣ Testing third failed login attempt (should block)...');
         response = await fetch(`${API_BASE_URL}/users/login`, {
             method: 'POST',
@@ -63,7 +63,7 @@ const testUserBlocking = async () => {
             console.log(`🔒 Account blocked until: ${new Date(data.blockedUntil).toLocaleString()}`);
         }
 
-        // Тест 4: Попытка входа заблокированного пользователя
+        // Test 4: Attempt to login while blocked
         console.log('\n4️⃣ Testing login attempt while blocked...');
         response = await fetch(`${API_BASE_URL}/users/login`, {
             method: 'POST',
@@ -94,7 +94,7 @@ const testUserBlocking = async () => {
     }
 };
 
-// Функция для тестирования сброса попыток админом
+// Function to test admin reset of attempts
 const testAdminReset = async (adminToken, userEmail) => {
     console.log('\n🔧 Testing admin reset functionality...');
 
@@ -125,7 +125,7 @@ const testAdminReset = async (adminToken, userEmail) => {
     }
 };
 
-// Функция для создания тестового пользователя
+// Function to create a test user
 const createTestUser = async () => {
     console.log('👤 Creating test user...');
 
@@ -162,7 +162,7 @@ const createTestUser = async () => {
         } else {
             const data = await response.json();
             console.log('⚠️ User might already exist:', data.message);
-            return true; // Продолжаем тесты даже если пользователь уже существует
+            return true; // Continue tests even if the user already exists
         }
     } catch (error) {
         console.error('❌ Failed to create test user:', error);
@@ -170,19 +170,19 @@ const createTestUser = async () => {
     }
 };
 
-// Основная функция для запуска всех тестов
+// Main function to run all tests
 const runAllTests = async () => {
     console.log('🚀 Starting comprehensive user blocking tests...');
     console.log('════════════════════════════════════════════════════════════');
 
-    // Создаем тестового пользователя
+    // Create test user
     const userCreated = await createTestUser();
     if (!userCreated) {
         console.log('❌ Cannot proceed without test user');
         return;
     }
 
-    // Тестируем блокировку
+    // Test the blocking flow
     const blockingResults = await testUserBlocking();
 
     console.log('\n📋 Test Summary:');
@@ -199,7 +199,7 @@ const runAllTests = async () => {
     console.log('2. Run: testAdminReset("your-admin-token", "test@example.com")');
 };
 
-// Экспортируем функции для использования в консоли
+// Export functions for console use
 if (typeof window !== 'undefined') {
     window.testUserBlocking = testUserBlocking;
     window.testAdminReset = testAdminReset;
@@ -207,10 +207,10 @@ if (typeof window !== 'undefined') {
     window.runAllTests = runAllTests;
 
     console.log('🧪 Test functions loaded! Available functions:');
-    console.log('- runAllTests() - запустить все тесты');
-    console.log('- testUserBlocking() - тест блокировки');
-    console.log('- testAdminReset(token, email) - тест сброса админом');
-    console.log('- createTestUser() - создать тестового пользователя');
+    console.log('- runAllTests() - run all tests');
+    console.log('- testUserBlocking() - test blocking flow');
+    console.log('- testAdminReset(token, email) - test admin reset');
+    console.log('- createTestUser() - create a test user');
 }
 
 export { testUserBlocking, testAdminReset, createTestUser, runAllTests };

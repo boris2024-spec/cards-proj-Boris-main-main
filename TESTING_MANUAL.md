@@ -1,137 +1,137 @@
-# 🧪 Инструкция по тестированию блокировки пользователей
+# 🧪 Manual Testing Guide for User Blocking
 
-## 🚀 Быстрый старт
+## 🚀 Quick Start
 
-### 1. Запуск приложения
+### 1. Start the app
 ```bash
-# В терминале проекта
+# In the project terminal
 npm run dev
 ```
 
-### 2. Открыть в браузере
-- Перейти на `http://localhost:5173`
-- Открыть страницу входа
+### 2. Open in browser
+- Go to `http://localhost:5173`
+- Open the login page
 
-## 🔧 Тестовые сценарии
+## 🔧 Test Scenarios
 
-### Сценарий 1: Блокировка пользователя
+### Scenario 1: User blocking
 
-1. **Создать тестового пользователя** (если нет):
-   - Перейти на страницу регистрации
-   - Создать пользователя с email: `test@example.com`
-   - Пароль: `Abc123!`
+1. **Create a test user** (if not present):
+   - Go to the registration page
+   - Create a user with email: `test@example.com`
+   - Password: `Abc123!`
 
-2. **Тест неудачных попыток входа**:
+2. **Test failed login attempts**:
    - Email: `test@example.com`
-   - Пароль: `wrongpassword`
-   - Повторить 3 раза
+   - Password: `wrongpassword`
+   - Repeat 3 times
 
-3. **Ожидаемое поведение**:
-   - 1-я попытка: Обычная ошибка
-   - 2-я попытка: Показать "2 attempts remaining" + предупреждение
-   - 3-я попытка: Блокировка на 24 часа + таймер
+3. **Expected behavior**:
+   - 1st attempt: Normal error message
+   - 2nd attempt: Show "2 attempts remaining" + a warning
+   - 3rd attempt: Account blocked for 24 hours + countdown timer
 
-### Сценарий 2: Интерфейс блокировки
+### Scenario 2: Blocking UI
 
-1. **Проверить элементы UI**:
-   - ✅ Индикатор оставшихся попыток (точки)
-   - ✅ Прогресс-бар попыток
-   - ✅ Предупреждающее сообщение
-   - ✅ Заблокированная кнопка входа
-   - ✅ Таймер обратного отсчета
+1. **Check UI elements**:
+   - ✅ Attempts indicator (dots)
+   - ✅ Attempts progress bar
+   - ✅ Warning message
+   - ✅ Disabled login button when blocked
+   - ✅ Countdown timer
 
-2. **Проверить адаптивность**:
-   - Протестировать на мобильном
-   - Убедиться, что все элементы отображаются корректно
+2. **Check responsiveness**:
+   - Test on mobile
+   - Ensure all elements render correctly
 
-### Сценарий 3: Администраторские функции
+### Scenario 3: Admin functions
 
-1. **Войти как администратор**:
-   - Использовать админский аккаунт
-   - Перейти в админ-панель
+1. **Log in as administrator**:
+   - Use an admin account
+   - Open the admin panel
 
-2. **Тест сброса блокировки**:
-   - Перейти в "User Management"
-   - Найти заблокированного пользователя
-   - Нажать кнопку "Reset"
-   - Подтвердить действие
+2. **Reset blocking (admin)**:
+   - Go to "User Management"
+   - Find the blocked user
+   - Click the "Reset" button
+   - Confirm the action
 
-3. **Тест формы сброса**:
-   - Перейти в "Admin Dashboard"
-   - Использовать форму "Reset User Login Attempts"
-   - Ввести email: `test@example.com`
-   - Нажать "Reset Login Attempts"
+3. **Reset via admin form**:
+   - Open "Admin Dashboard"
+   - Use the "Reset User Login Attempts" form
+   - Enter email: `test@example.com`
+   - Click "Reset Login Attempts"
 
-### Сценарий 4: Автоматическое тестирование
+### Scenario 4: Automated testing
 
-1. **В консоли браузера выполнить**:
+1. **Run in browser console**:
 ```javascript
-// Загрузить тестовый скрипт
+// Load the test script
 const script = document.createElement('script');
 script.src = '/test-user-blocking.js';
 document.head.appendChild(script);
 
-// После загрузки запустить тесты
+// After it loads, run the tests
 setTimeout(() => {
   runAllTests();
 }, 1000);
 ```
 
-2. **Следить за выводом в консоли**:
-   - Создание тестового пользователя
-   - 3 неудачные попытки входа
-   - Проверка блокировки
-   - Сводка результатов
+2. **Watch console output**:
+   - Test user creation
+   - 3 failed login attempts
+   - Blocking verification
+   - Summary of results
 
-## 📋 Чек-лист тестирования
+## 📋 Test Checklist
 
-### Функциональность ✅
-- [ ] Блокировка после 3 неудачных попыток
-- [ ] Отображение оставшихся попыток
-- [ ] Предупреждение перед блокировкой
-- [ ] Таймер обратного отсчета
-- [ ] Заблокированная кнопка входа
-- [ ] Сброс блокировки админом
-- [ ] Автоматическая разблокировка
+### Functionality ✅
+- [ ] Blocking after 3 failed attempts
+- [ ] Display remaining attempts
+- [ ] Warning before blocking
+- [ ] Countdown timer
+- [ ] Disabled login button when blocked
+- [ ] Admin can reset blocking
+- [ ] Automatic unblock after timeout
 
 ### UI/UX ✅
-- [ ] Индикатор попыток (точки)
-- [ ] Прогресс-бар
-- [ ] Предупреждающие сообщения
-- [ ] Сообщения об ошибках
-- [ ] Адаптивный дизайн
-- [ ] Анимации и переходы
+- [ ] Attempts indicator (dots)
+- [ ] Progress bar
+- [ ] Warning messages
+- [ ] Error messages
+- [ ] Responsive layout
+- [ ] Animations and transitions
 
-### Админ-панель ✅
-- [ ] Кнопка сброса в списке пользователей
-- [ ] Форма сброса в дашборде
-- [ ] Подтверждения действий
-- [ ] Уведомления об успехе/ошибке
+### Admin panel ✅
+- [ ] Reset button in users list
+- [ ] Reset form in dashboard
+- [ ] Action confirmations
+- [ ] Success/error notifications
 
-## 🐛 Известные особенности
+## 🐛 Known behaviors
 
-1. **Таймер обновляется каждую секунду** - это нормально
-2. **Блокировка сбрасывается при успешном входе** - по дизайну
-3. **Админ может сбросить попытки в любое время** - это функция
-4. **Форма отключается при блокировке** - защита от спама
+1. **Timer updates every second** — this is expected
+2. **Blocking is reset on successful login** — by design
+3. **Admin can reset attempts at any time** — intended functionality
+4. **Reset form is disabled while the account is blocked** — anti-spam measure
 
-## 🔍 Отладка
+## 🔍 Debugging
 
-### Если что-то не работает:
+### If something doesn't work:
 
-1. **Проверить консоль браузера** на ошибки JavaScript
-2. **Проверить Network tab** для ответов API
-3. **Убедиться, что бэкенд запущен** на порту 3000
-4. **Проверить версию браузера** (нужна поддержка ES6+)
+1. **Check browser console** for JavaScript errors
+2. **Check Network tab** for API responses
+3. **Make sure the backend is running** on port 3000
+4. **Verify browser supports ES6+**
 
-### Полезные команды для отладки:
+### Helpful debugging commands:
 
 ```javascript
-// В консоли браузера
-localStorage.getItem('token'); // Проверить токен
-fetch('http://localhost:3000/users/login', {method: 'POST', ...}); // Тест API
+// In the browser console
+localStorage.getItem('token'); // Check token
+fetch('http://localhost:3000/users/login', {method: 'POST', ...}); // Test API
 ```
 
-## ✅ Готово!
+## ✅ Done!
 
-После прохождения всех тестов система блокировки пользователей готова к использованию в продакшене! 🎉
+After completing all tests the user-blocking system is ready for production use. 🎉

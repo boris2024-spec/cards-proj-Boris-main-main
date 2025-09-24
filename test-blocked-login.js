@@ -1,14 +1,14 @@
-// Тестовый скрипт для проверки блокировки пользователей при логине
-// Выполните в консоли браузера на странице http://localhost:5174
+// Test script to verify user blocking behavior on login
+// Run in the browser console on http://localhost:5174
 
 async function testBlockedUserLogin() {
-    console.log('🧪 Тестирование блокировки пользователей при логине\n');
+    console.log('🧪 Testing user blocking on login\n');
 
     const API_BASE_URL = "http://localhost:3000";
 
     try {
-        // 1. Попытка логина с заведомо неверными данными
-        console.log('1️⃣ Тестирование с неверными данными...');
+        // 1. Attempt login with intentionally wrong credentials
+        console.log('1️⃣ Testing with wrong credentials...');
 
         const wrongLoginResponse = await fetch(`${API_BASE_URL}/users/login`, {
             method: 'POST',
@@ -21,24 +21,24 @@ async function testBlockedUserLogin() {
 
         if (!wrongLoginResponse.ok) {
             const wrongError = await wrongLoginResponse.json();
-            console.log(`   ❌ Ошибка неверных данных: ${wrongError.error?.message}`);
+            console.log(`   ❌ Wrong credentials error: ${wrongError.error?.message}`);
         }
 
-        // 2. Получение списка пользователей (требует admin токена)
+        // 2. Fetch users list (requires admin token)
         const adminToken = localStorage.getItem('my token');
         if (!adminToken) {
-            console.log('⚠️ Для полного тестирования нужно быть авторизованным как администратор');
-            console.log('   Авторизуйтесь как админ и запустите скрипт снова');
+            console.log('⚠️ Full testing requires you to be logged in as an administrator');
+            console.log('   Log in as admin and run the script again');
             return;
         }
 
-        console.log('\n2️⃣ Получение списка пользователей...');
+        console.log('\n2️⃣ Fetching users...');
         const usersResponse = await fetch(`${API_BASE_URL}/users`, {
             headers: { "x-auth-token": adminToken }
         });
 
         if (!usersResponse.ok) {
-            console.log(`   ❌ Не удалось получить список пользователей: ${usersResponse.status}`);
+            console.log(`   ❌ Failed to fetch users: ${usersResponse.status}`);
             return;
         }
 
@@ -46,77 +46,77 @@ async function testBlockedUserLogin() {
         const testUser = users.find(user => !user.isAdmin && !user.isBlocked);
 
         if (!testUser) {
-            console.log('   ⚠️ Не найден подходящий пользователь для тестирования');
+            console.log('   ⚠️ No suitable test user found');
             return;
         }
 
-        console.log(`   ✅ Тестовый пользователь: ${testUser.email}`);
+        console.log(`   ✅ Test user: ${testUser.email}`);
 
-        // 3. Блокируем пользователя
-        console.log('\n3️⃣ Блокируем тестового пользователя...');
+        // 3. Block the user
+        console.log('\n3️⃣ Blocking the test user...');
         const blockResponse = await fetch(`${API_BASE_URL}/users/${testUser._id}/block`, {
             method: 'PATCH',
             headers: { "x-auth-token": adminToken }
         });
 
         if (blockResponse.ok) {
-            console.log('   ✅ Пользователь заблокирован');
+            console.log('   ✅ User blocked');
 
-            // 4. Попытка логина заблокированного пользователя
-            console.log('\n4️⃣ Попытка логина заблокированного пользователя...');
+            // 4. Attempt login with the blocked user
+            console.log('\n4️⃣ Attempt login with blocked user...');
 
-            // Здесь нужно ввести правильный пароль для тестового пользователя
-            console.log('⚠️ Важно: Для тестирования нужно знать пароль тестового пользователя');
-            console.log(`   Попробуйте войти под ${testUser.email} через форму логина`);
-            console.log('   Ожидаемый результат: "Пользователь заблокирован. Обратитесь к администратору."');
+            // You need to enter the correct password for the test user here
+            console.log('⚠️ Important: You need to know the test user password for this step');
+            console.log(`   Try to login as ${testUser.email} via the login form`);
+            console.log('   Expected result: "User is blocked. Contact administrator."');
 
-            // 5. Разблокируем пользователя
+            // 5. Unblock the user
             setTimeout(async () => {
-                console.log('\n5️⃣ Разблокируем пользователя...');
+                console.log('\n5️⃣ Unblocking the user...');
                 const unblockResponse = await fetch(`${API_BASE_URL}/users/${testUser._id}/unblock`, {
                     method: 'PATCH',
                     headers: { "x-auth-token": adminToken }
                 });
 
                 if (unblockResponse.ok) {
-                    console.log('   ✅ Пользователь разблокирован');
-                    console.log('   Теперь пользователь снова может войти в систему');
+                    console.log('   ✅ User unblocked');
+                    console.log('   The user can now log in again');
                 }
             }, 2000);
 
         } else {
-            console.log('   ❌ Не удалось заблокировать пользователя');
+            console.log('   ❌ Failed to block the user');
         }
 
     } catch (error) {
-        console.error('❌ Ошибка тестирования:', error);
+        console.error('❌ Testing error:', error);
     }
 }
 
-// Функция для тестирования формы логина напрямую
+// Function to directly test the login form
 function testLoginForm() {
-    console.log('🔑 Тестирование формы логина...');
+    console.log('🔑 Testing login form...');
 
-    // Находим поля формы
+    // Find the form fields
     const emailField = document.querySelector('input[name="email"]');
     const passwordField = document.querySelector('input[name="password"]');
     const submitButton = document.querySelector('button[type="submit"]');
 
     if (!emailField || !passwordField || !submitButton) {
-        console.log('❌ Форма логина не найдена. Убедитесь, что вы на странице /login');
+        console.log('❌ Login form not found. Make sure you are on /login');
         return;
     }
 
-    console.log('✅ Форма логина найдена');
-    console.log('📝 Введите данные заблокированного пользователя и нажмите "Войти"');
-    console.log('   Ожидаемый результат: красное уведомление о блокировке');
+    console.log('✅ Login form found');
+    console.log('📝 Enter the blocked user credentials and click "Login"');
+    console.log('   Expected result: red notification about blocking');
 }
 
-// Экспортируем функции
+// Export functions
 window.testBlockedUserLogin = testBlockedUserLogin;
 window.testLoginForm = testLoginForm;
 
-console.log('🔧 Скрипт тестирования блокировки загружен!');
-console.log('📋 Доступные команды:');
-console.log('   testBlockedUserLogin() - полное тестирование блокировки');
-console.log('   testLoginForm() - проверка формы логина');
+console.log('🔧 Blocking test script loaded!');
+console.log('📋 Available commands:');
+console.log('   testBlockedUserLogin() - full blocking test');
+console.log('   testLoginForm() - login form check');

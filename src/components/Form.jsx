@@ -15,7 +15,7 @@ const Form = ({
   color = "inherit",
   spacing = 1,
   styles = {},
-  hideButtons = false, // Новый пропс для скрытия кнопок
+  hideButtons = false, // New prop to hide action buttons
   children,
 }) => {
   const navigate = useNavigate();

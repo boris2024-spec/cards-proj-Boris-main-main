@@ -1,66 +1,66 @@
-# ✅ РЕАЛИЗОВАНО: Блокировка пользователей при логине
+# ✅ IMPLEMENTED: User blocking on login
 
-## Что сделано
+## What was done
 
-### 1. Улучшена обработка ошибок в форме логина
-- **Файл**: `src/users/components/LoginForm.jsx`
-- **Изменения**: 
-  - Добавлена специфичная обработка ошибки блокировки
-  - Заменены `alert()` на красивые уведомления `useSnack`
-  - Показываются разные сообщения для разных типов ошибок
+### 1. Improved error handling in the login form
+- **File**: `src/users/components/LoginForm.jsx`
+- **Changes**: 
+  - Added specific handling for the blocked user error
+  - Replaced `alert()` with nicer `useSnack` notifications
+  - Different messages shown for different error types
 
-### 2. Создан глобальный interceptor для axios
-- **Файл**: `src/services/axiosInterceptor.js` (новый)
-- **Функциональность**:
-  - Автоматически отлавливает ошибки блокировки (403)
-  - Автоматически разлогинивает заблокированного пользователя
-  - Перенаправляет на страницу логина
-  - Предотвращает множественные перенаправления
+### 2. Global axios interceptor created
+- **File**: `src/services/axiosInterceptor.js` (new)
+- **Functionality**:
+  - Automatically catches blocking errors (HTTP 403)
+  - Automatically logs out a blocked user
+  - Redirects to the login page
+  - Prevents repeated redirects
 
-### 3. Подключен interceptor к приложению
-- **Файл**: `src/App.jsx`
-- **Изменения**: Добавлен импорт interceptor
+### 3. Interceptor integrated into the app
+- **File**: `src/App.jsx`
+- **Changes**: Added interceptor import
 
-## Как это работает
+## How it works
 
-### При попытке логина заблокированного пользователя:
-1. Сервер возвращает ошибку с сообщением о блокировке
-2. `LoginForm` отлавливает эту ошибку
-3. Показывается красное уведомление: **"Пользователь заблокирован. Обратитесь к администратору."**
+### When a blocked user attempts to login:
+1. The server returns an error with a blocking message
+2. `LoginForm` catches this error
+3. A red notification is displayed: **"User is blocked. Contact administrator."**
 
-### При блокировке во время активной сессии:
-1. Любой API запрос возвращает 403 ошибку с информацией о блокировке
-2. Axios interceptor автоматически:
-   - Удаляет токен из localStorage
-   - Перенаправляет на `/login`
-   - Показывает уведомление о блокировке
+### When a user is blocked during an active session:
+1. Any API request returns HTTP 403 with blocking information
+2. Axios interceptor automatically:
+   - Removes the token from localStorage
+   - Redirects to `/login`
+   - Shows a blocking notification
 
-## Тестирование
+## Testing
 
-### Быстрый тест:
-1. Откройте http://localhost:5174
-2. Войдите как админ → Admin Dashboard → User Management
-3. Заблокируйте любого пользователя (кнопка "Block")
-4. Выйдите и попробуйте войти под заблокированным пользователем
-5. **Результат**: Красное уведомление о блокировке
+### Quick test:
+1. Open http://localhost:5174
+2. Login as admin → Admin Dashboard → User Management
+3. Block any user ("Block" button)
+4. Logout and try to login as the blocked user
+5. **Result**: A red blocking notification is shown
 
-### Полный тест:
-1. Откройте DevTools (F12) → Console
-2. Скопируйте содержимое файла `test-blocked-login.js`
-3. Выполните `testBlockedUserLogin()`
+### Full test:
+1. Open DevTools (F12) → Console
+2. Copy the contents of `test-blocked-login.js`
+3. Run `testBlockedUserLogin()`
 
-## Технические детали
+## Technical details
 
-### Ожидаемые ответы сервера:
+### Expected server responses:
 ```json
-// Блокировка при логине
+// Blocking on login
 {
   "error": {
     "message": "User is blocked"
   }
 }
 
-// Блокировка во время сессии (HTTP 403)
+// Blocking during session (HTTP 403)
 {
   "error": {
     "message": "User is blocked"
@@ -68,13 +68,13 @@
 }
 ```
 
-### Файлы с изменениями:
-- ✏️ `src/users/components/LoginForm.jsx` - улучшенная обработка ошибок
-- 🆕 `src/services/axiosInterceptor.js` - глобальная обработка блокировки
-- ✏️ `src/App.jsx` - подключение interceptor
-- 📝 `BLOCKED_USER_LOGIN_IMPLEMENTATION.md` - подробная документация
-- 🧪 `test-blocked-login.js` - тестовый скрипт
+### Changed files:
+- ✏️ `src/users/components/LoginForm.jsx` - improved error handling
+- 🆕 `src/services/axiosInterceptor.js` - global blocking handler
+- ✏️ `src/App.jsx` - interceptor integration
+- 📝 `BLOCKED_USER_LOGIN_IMPLEMENTATION.md` - detailed documentation
+- 🧪 `test-blocked-login.js` - test script
 
-## Статус: ✅ ГОТОВО
+## Status: ✅ READY
 
-Функциональность блокировки пользователей при логине полностью реализована и готова к тестированию!
+The user-blocking-on-login functionality is fully implemented and ready for testing!

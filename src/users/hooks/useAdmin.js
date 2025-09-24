@@ -63,7 +63,7 @@ const useAdmin = (token) => {
 
             let response;
 
-            // Специальная обработка для блокировки/разблокировки
+            // Special handling for block/unblock operations
             if (field === "isBlocked") {
                 const endpoint = value ? "block" : "unblock";
                 response = await axios.patch(
@@ -74,7 +74,7 @@ const useAdmin = (token) => {
                     }
                 );
             } else {
-                // Для других полей используем обычный PATCH
+                // For other fields use regular PATCH
                 response = await axios.patch(
                     `${API_BASE_URL}/users/${userId}`,
                     { [field]: value },

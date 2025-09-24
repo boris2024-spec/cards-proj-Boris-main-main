@@ -1,7 +1,7 @@
 import axios from "axios";
 import { removeToken } from "../users/services/localStorageService";
 
-// Настройка interceptor для обработки ошибок аутентификации и блокировки
+// Setup interceptor to handle authentication errors and account blocking
 let isRedirecting = false;
 
 axios.interceptors.response.use(
@@ -11,20 +11,20 @@ axios.interceptors.response.use(
     (error) => {
         const errorMessage = error.response?.data?.error?.message || error.response?.data?.message || "";
 
-        // Обработка ошибки блокировки пользователя
+        // Handle user blocking error
         if (
             error.response?.status === 403 &&
-            (errorMessage.includes("blocked") || errorMessage.includes("заблокирован"))
+            errorMessage.includes("blocked")
         ) {
             if (!isRedirecting) {
                 isRedirecting = true;
                 removeToken();
 
-                // Перенаправляем на страницу логина
+                // Redirect to login page
                 window.location.href = "/login";
 
-                // Показываем уведомление
-                alert("Ваш аккаунт был заблокирован администратором.");
+                // Show notification in English
+                alert("Your account was blocked by an administrator.");
 
                 setTimeout(() => {
                     isRedirecting = false;
@@ -32,7 +32,7 @@ axios.interceptors.response.use(
             }
         }
 
-        // Обработка ошибок 401 (неавторизован)
+        // Handle 401 (unauthorized) errors
         if (error.response?.status === 401) {
             if (!isRedirecting) {
                 isRedirecting = true;

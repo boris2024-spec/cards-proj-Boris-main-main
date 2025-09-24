@@ -20,14 +20,14 @@ function LoginForm() {
   const navigate = useNavigate();
   const setSnack = useSnack();
 
-  // Состояния для блокировки и попыток
+  // States for blocking and login attempts
   const [isBlocked, setIsBlocked] = useState(false);
   const [remainingAttempts, setRemainingAttempts] = useState(3);
   const [blockCountdown, setBlockCountdown] = useState('');
   const [warning, setWarning] = useState('');
   const [countdownInterval, setCountdownInterval] = useState(null);
 
-  // Очистка интервала при размонтировании
+  // Clear countdown interval on unmount
   useEffect(() => {
     return () => {
       if (countdownInterval) {
@@ -36,7 +36,7 @@ function LoginForm() {
     };
   }, [countdownInterval]);
 
-  // Функция для запуска таймера обратного отсчета
+  // Function to start countdown timer
   const startCountdown = (blockedUntil) => {
     if (countdownInterval) {
       clearInterval(countdownInterval);
@@ -55,7 +55,7 @@ function LoginForm() {
           clearInterval(countdownInterval);
           setCountdownInterval(null);
         }
-        setSnack("success", "Блокировка снята. Вы можете попробовать войти снова.");
+        setSnack("success", "Account unblocked. You may try to sign in again.");
         return;
       }
 
@@ -63,7 +63,8 @@ function LoginForm() {
       const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
-      setBlockCountdown(`🔒 Разблокировка через: ${hours}ч ${minutes}м ${seconds}с`);
+      // Show countdown in English (hours, minutes, seconds)
+      setBlockCountdown(`🔒 Unblocks in: ${hours}h ${minutes}m ${seconds}s`);
     };
 
     updateCountdown();
@@ -79,7 +80,7 @@ function LoginForm() {
       );
       console.log(response);
 
-      // Успешный вход - сбрасываем все состояния
+      // Successful login - reset all states
       setIsBlocked(false);
       setRemainingAttempts(3);
       setWarning('');
@@ -88,7 +89,7 @@ function LoginForm() {
       setTokenInLocalStorage(response.data);
       setToken(response.data);
       setUser(getUser());
-      setSnack("success", "Добро пожаловать!");
+      setSnack("success", "Welcome!");
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -97,12 +98,12 @@ function LoginForm() {
       const data = error.response?.data || {};
       const errorMessage = data.message || data.error?.message || error.message;
 
-      // Обработка блокировки аккаунта (код 423)
+      // Handle account blocking (status 423)
       if (status === 423) {
         setIsBlocked(true);
         setSnack("error", errorMessage);
 
-        // Показать время разблокировки если есть
+        // Show unblock time if provided
         if (data.blockedUntil) {
           const blockedUntil = new Date(data.blockedUntil);
           startCountdown(blockedUntil);
@@ -110,39 +111,39 @@ function LoginForm() {
         return;
       }
 
-      // Обработка неверных учетных данных (код 401) с показом оставшихся попыток
+      // Handle invalid credentials (status 401) and show remaining attempts
       if (status === 401) {
         setSnack("error", errorMessage);
 
-        // Извлечь количество попыток из сообщения
+        // Extract remaining attempts from the message
         const remainingMatch = errorMessage.match(/(\d+) attempts remaining/);
         if (remainingMatch) {
           const remaining = parseInt(remainingMatch[1]);
           setRemainingAttempts(remaining);
 
           if (remaining <= 1) {
-            setWarning('⚠️ Еще одна неудачная попытка заблокирует аккаунт на 24 часа!');
+            setWarning('⚠️ One more failed attempt will block the account for 24 hours!');
           } else {
             setWarning('');
           }
         } else {
-          // Если формат сообщения другой, уменьшаем счетчик
+          // If message format is different, decrement counter
           setRemainingAttempts(prev => Math.max(0, prev - 1));
           if (remainingAttempts <= 2) {
-            setWarning('⚠️ Еще одна неудачная попытка заблокирует аккаунт на 24 часа!');
+            setWarning('⚠️ One more failed attempt will block the account for 24 hours!');
           }
         }
         return;
       }
 
-      // Обработка других ошибок
-      if (errorMessage.includes("blocked") || errorMessage.includes("заблокирован")) {
-        setSnack("error", "Пользователь заблокирован. Обратитесь к администратору.");
+      // Handle other errors
+      if (errorMessage.includes("blocked")) {
+        setSnack("error", "User is blocked. Contact an administrator.");
         setIsBlocked(true);
       } else if (errorMessage.includes("Invalid email or password")) {
-        setSnack("error", "Неверный email или пароль");
+        setSnack("error", "Invalid email or password");
       } else {
-        setSnack("error", "Ошибка входа в систему");
+        setSnack("error", "Login error");
       }
     }
   };
@@ -154,7 +155,7 @@ function LoginForm() {
   );
 
   const handleReset = () => {
-    // Сброс формы к начальным значениям
+    // Reset form to initial values
     handleChange({ target: { name: 'email', value: '' } });
     handleChange({ target: { name: 'password', value: '' } });
     setWarning('');
@@ -183,11 +184,11 @@ function LoginForm() {
         hideButtons={false}
         validateForm={() => formDetails.email && formDetails.password && !isBlocked}
       >
-        {/* Индикатор блокировки */}
+        {/* Block indicator */}
         {isBlocked && (
           <Box sx={{ mb: 2, width: '100%' }}>
             <Alert severity="error" sx={{ mb: 1 }}>
-              🔒 Аккаунт заблокирован из-за множественных неудачных попыток входа
+              🔒 Account blocked due to multiple failed sign-in attempts
             </Alert>
             {blockCountdown && (
               <Typography
@@ -205,7 +206,7 @@ function LoginForm() {
           </Box>
         )}
 
-        {/* Предупреждение о приближающейся блокировке */}
+        {/* Warning about impending block */}
         {warning && !isBlocked && (
           <Box sx={{ mb: 2, width: '100%' }}>
             <Alert severity="warning">
@@ -214,11 +215,11 @@ function LoginForm() {
           </Box>
         )}
 
-        {/* Индикатор оставшихся попыток */}
+        {/* Remaining attempts indicator */}
         {!isBlocked && remainingAttempts < 3 && (
           <Box sx={{ mb: 2, textAlign: 'center', width: '100%' }}>
             <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
-              Осталось попыток: {remainingAttempts}
+              Remaining attempts: {remainingAttempts}
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
               {[1, 2, 3].map(i => (

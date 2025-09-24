@@ -1,18 +1,18 @@
-# 🔐 Реализация Блокировки Пользователей - Фронтенд
+# 🔐 User Blocking Implementation - Frontend
 
-## ✅ Что было реализовано
+## ✅ Implemented features
 
-### 1. Обновленная форма входа (`LoginForm.jsx`)
+### 1. Updated login form (`LoginForm.jsx`)
 
-**Новые возможности:**
-- ✅ Обработка кода ответа 423 (аккаунт заблокирован)
-- ✅ Отображение оставшихся попыток входа
-- ✅ Таймер обратного отсчета до разблокировки
-- ✅ Предупреждение перед блокировкой
-- ✅ Блокировка кнопки входа при заблокированном аккаунте
-- ✅ Визуальные индикаторы состояния
+**New features:**
+- ✅ Handle HTTP 423 (account locked)
+- ✅ Display remaining login attempts
+- ✅ Countdown timer until unblock
+- ✅ Warning before blocking
+- ✅ Disable login button when account is locked
+- ✅ Visual state indicators
 
-**Новые состояния:**
+**State variables introduced:**
 ```javascript
 const [isBlocked, setIsBlocked] = useState(false);
 const [remainingAttempts, setRemainingAttempts] = useState(3);
@@ -20,31 +20,31 @@ const [blockCountdown, setBlockCountdown] = useState('');
 const [warning, setWarning] = useState('');
 ```
 
-### 2. Админ-панель для управления блокировками
+### 2. Admin panel for managing locks
 
 **AdminUsersPage.jsx:**
-- ✅ Кнопка "Reset" для сброса попыток входа
-- ✅ Подтверждение действия
-- ✅ Уведомления об успехе/ошибке
+- ✅ "Reset" button to reset login attempts
+- ✅ Action confirmation
+- ✅ Success/error notifications
 
 **AdminLockResetForm.jsx:**
-- ✅ Отдельная форма для сброса блокировок
-- ✅ Ввод email пользователя
-- ✅ Валидация и обработка ошибок
-- ✅ Интеграция в админ-дашборд
+- ✅ Separate form for resetting locks
+- ✅ User email input
+- ✅ Validation and error handling
+- ✅ Integration into admin dashboard
 
-### 3. Улучшенный компонент Form
+### 3. Improved `Form` component
 
 **Form.jsx:**
-- ✅ Новый пропс `hideButtons` для кастомизации
-- ✅ Условное отображение стандартных кнопок
+- ✅ New `hideButtons` prop for customization
+- ✅ Conditional rendering of default action buttons
 
-## 🎯 Как это работает
+## 🎯 How it works
 
-### Обработка ответов сервера
+### Server response handling
 
 ```javascript
-// Код 423 - Аккаунт заблокирован
+// HTTP 423 - account is locked
 if (status === 423) {
   setIsBlocked(true);
   setSnack("error", errorMessage);
@@ -55,7 +55,7 @@ if (status === 423) {
   }
 }
 
-// Код 401 - Неверные учетные данные с подсчетом попыток
+// HTTP 401 - invalid credentials with attempts count
 if (status === 401) {
   const remainingMatch = errorMessage.match(/(\d+) attempts remaining/);
   if (remainingMatch) {
@@ -63,13 +63,13 @@ if (status === 401) {
     setRemainingAttempts(remaining);
     
     if (remaining <= 1) {
-      setWarning('⚠️ Еще одна неудачная попытка заблокирует аккаунт на 24 часа!');
+      setWarning('⚠️ One more failed attempt will lock the account for 24 hours!');
     }
   }
 }
 ```
 
-### Таймер обратного отсчета
+### Countdown timer
 
 ```javascript
 const startCountdown = (blockedUntil) => {
@@ -79,7 +79,7 @@ const startCountdown = (blockedUntil) => {
     
     if (timeLeft <= 0) {
       setIsBlocked(false);
-      // Сброс всех состояний
+      // Reset all related states
       return;
     }
     
@@ -87,7 +87,7 @@ const startCountdown = (blockedUntil) => {
     const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
     
-    setBlockCountdown(`🔒 Разблокировка через: ${hours}ч ${minutes}м ${seconds}с`);
+    setBlockCountdown(`🔒 Unblocks in: ${hours}h ${minutes}m ${seconds}s`);
   };
   
   const interval = setInterval(updateCountdown, 1000);
@@ -95,13 +95,13 @@ const startCountdown = (blockedUntil) => {
 };
 ```
 
-## 🎨 UI/UX элементы
+## 🎨 UI/UX elements
 
-### 1. Индикатор попыток
+### 1. Attempts indicator
 ```jsx
 {!isBlocked && remainingAttempts < 3 && (
   <Box sx={{ mb: 2, textAlign: 'center' }}>
-    <Typography>Осталось попыток: {remainingAttempts}</Typography>
+    <Typography>Attempts left: {remainingAttempts}</Typography>
     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
       {[1, 2, 3].map(i => (
         <Box
@@ -118,11 +118,11 @@ const startCountdown = (blockedUntil) => {
 )}
 ```
 
-### 2. Блокированное состояние
+### 2. Blocked state
 ```jsx
 {isBlocked && (
   <Alert severity="error">
-    🔒 Аккаунт заблокирован из-за множественных неудачных попыток входа
+    🔒 Account is blocked due to multiple failed login attempts
   </Alert>
 )}
 
@@ -133,7 +133,7 @@ const startCountdown = (blockedUntil) => {
 )}
 ```
 
-### 3. Заблокированная кнопка
+### 3. Disabled login button
 ```jsx
 <Button
   disabled={isBlocked}
@@ -142,13 +142,13 @@ const startCountdown = (blockedUntil) => {
     '&:disabled': { opacity: 0.65, cursor: 'not-allowed' }
   }}
 >
-  {isBlocked ? '🔒 Аккаунт заблокирован' : 'Войти'}
+  {isBlocked ? '🔒 Account is blocked' : 'Login'}
 </Button>
 ```
 
-## 🔧 Административные функции
+## 🔧 Administrative functions
 
-### Сброс попыток в списке пользователей
+### Reset attempts in users list
 ```jsx
 <Button
   onClick={() => handleResetLoginAttempts(user.email)}
@@ -159,7 +159,7 @@ const startCountdown = (blockedUntil) => {
 </Button>
 ```
 
-### Отдельная форма сброса
+### Separate reset form
 ```jsx
 const handleReset = async () => {
   await axios.patch(`${API_BASE_URL}/users/reset-login-attempts`, {
@@ -170,85 +170,85 @@ const handleReset = async () => {
 };
 ```
 
-## 🧪 Тестирование
+## 🧪 Testing
 
-### Автоматические тесты
-Создан файл `test-user-blocking.js` с функциями:
+### Automated tests
+The file `test-user-blocking.js` was created with functions:
 
 ```javascript
-// Запуск всех тестов
+// Run all tests
 runAllTests()
 
-// Тест блокировки
+// Blocking test
 testUserBlocking()
 
-// Тест сброса админом
+// Admin reset test
 testAdminReset(adminToken, userEmail)
 
-// Создание тестового пользователя
+// Create test user
 createTestUser()
 ```
 
-### Ручное тестирование
+### Manual testing
 
-1. **Тест блокировки:**
-   - Введите неверный пароль 3 раза
-   - Убедитесь, что счетчик попыток уменьшается
-   - Проверьте блокировку после 3-й попытки
-   - Убедитесь, что таймер работает
+1. **Blocking test:**
+   - Enter an incorrect password 3 times
+   - Ensure attempts counter decreases
+   - Verify account is blocked after the 3rd attempt
+   - Verify countdown timer works
 
-2. **Тест предупреждений:**
-   - Проверьте предупреждение после 2-й неудачной попытки
-   - Убедитесь, что визуальные индикаторы обновляются
+2. **Warning test:**
+   - Verify the warning after the 2nd failed attempt
+   - Ensure visual indicators update accordingly
 
-3. **Тест админских функций:**
-   - Войдите как админ
-   - Сбросьте попытки пользователя
-   - Убедитесь, что пользователь может войти
+3. **Admin functions test:**
+   - Login as admin
+   - Reset the user's attempts
+   - Ensure the user can log in afterwards
 
-## 📱 Адаптивность
+## 📱 Responsiveness
 
-Все компоненты адаптированы для мобильных устройств:
-- Используется Material-UI Grid система
+All components are responsive and mobile-friendly:
+- Uses Material-UI Grid system
 - Responsive breakpoints
-- Адаптивные размеры кнопок и отступов
+- Adaptive sizes for buttons and spacing
 
-## 🔒 Безопасность
+## 🔒 Security
 
-### Валидация на фронтенде
-- Проверка email формата
-- Защита от XSS в отображаемых сообщениях
-- Очистка интервалов для предотвращения утечек памяти
+### Frontend validation
+- Email format validation
+- XSS protection in displayed messages
+- Clearing intervals to avoid memory leaks
 
-### Обработка токенов
-- Безопасная передача админского токена
-- Проверка прав доступа перед показом админских функций
+### Token handling
+- Safe transmission of admin token
+- Authorization checks before showing admin features
 
-## 🎉 Готовые сценарии использования
+## 🎉 Usage scenarios
 
-1. **Обычный пользователь:**
-   - Видит количество оставшихся попыток
-   - Получает предупреждение перед блокировкой
-   - Видит таймер разблокировки
+1. **Normal user:**
+   - Sees number of remaining attempts
+   - Receives a warning before blocking
+   - Sees unblock countdown
 
-2. **Администратор:**
-   - Может сбросить попытки любого пользователя
-   - Видит статус блокировки в панели управления
-   - Получает подтверждения действий
+2. **Administrator:**
+   - Can reset attempts for any user
+   - Sees lock status in the admin panel
+   - Receives confirmations for actions
 
-3. **Заблокированный пользователь:**
-   - Видит четкое сообщение о блокировке
-   - Видит время до разблокировки
-   - Не может отправить форму входа
+3. **Blocked user:**
+   - Sees a clear blocking message
+   - Sees time until unblock
+   - Cannot submit the login form
 
-## 🚀 Готово к производству
+## 🚀 Production readiness
 
-- ✅ Полная интеграция с бэкендом
-- ✅ Обработка всех состояний ошибок
-- ✅ Responsive дизайн
-- ✅ Accessibility поддержка
-- ✅ Производительная анимация
-- ✅ Автоматическое тестирование
-- ✅ Документация
+- ✅ Full backend integration
+- ✅ Handling of all error states
+- ✅ Responsive design
+- ✅ Accessibility support
+- ✅ Performant animations
+- ✅ Automated testing
+- ✅ Documentation
 
-Все функции протестированы и готовы к использованию! 🎯
+All features tested and ready for production! 🎯

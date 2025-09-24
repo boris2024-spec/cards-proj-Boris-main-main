@@ -35,7 +35,7 @@ function CardsPage() {
   const { isDark } = useTheme();
   const [filter, setFilter] = useState("default"); // default, likes, date
 
-  // Удаление карточки
+  // Delete card
   const handleDeleteCard = useCallback((cardId) => {
     setCards(prevCards => prevCards.filter(card => card._id !== cardId));
     setFilteredCards(prevCards => prevCards.filter(card => card._id !== cardId));
@@ -47,11 +47,11 @@ function CardsPage() {
       setIsLoading(true);
       setError(null);
 
-      // Получаем все карточки
+      // Get all cards
       const cardsResponse = await axios.get(`${API_BASE_URL}/cards`);
       let allCards = cardsResponse.data;
 
-      // Фильтруем заблокированные карточки - не показываем их обычным пользователям
+      // Filter blocked cards - don't show them to regular users
       allCards = allCards.filter(card => !card.isBlocked);
 
       setCards(allCards);

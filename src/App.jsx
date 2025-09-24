@@ -5,7 +5,7 @@ import CustomThemeProvider from "./providers/CustomThemeProvider";
 import SnackbarProvider from "./providers/SnackbarProvider";
 import UserProvider from "./users/providers/UserProvider";
 import AdminSetupHelper from "./components/AdminSetupHelper";
-import "./services/axiosInterceptor"; // Импортируем interceptor для обработки блокировки
+import "./services/axiosInterceptor"; // Import interceptor to handle account blocking globally
 
 function App() {
   return (

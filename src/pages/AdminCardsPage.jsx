@@ -69,7 +69,7 @@ export default function AdminCardsPage() {
         }
     };
 
-    // Блокировка карточки
+    // Block card
     const handleBlockCard = async (cardId) => {
         try {
             await axios.patch(`${API_BASE_URL}/cards/${cardId}/block`, {}, {
@@ -80,14 +80,14 @@ export default function AdminCardsPage() {
                     ? { ...card, isBlocked: true }
                     : card
             ));
-            setSuccess("Card заблокирована");
+            setSuccess("Card blocked");
         } catch (error) {
-            setError("Ошибка при блокировке карточки");
-            console.error("Ошибка блокировки:", error);
+            setError("Error blocking card");
+            console.error("Error blocking card:", error);
         }
     };
 
-    // Разблокировка карточки
+    // Unblock card
     const handleUnblockCard = async (cardId) => {
         try {
             await axios.patch(`${API_BASE_URL}/cards/${cardId}/unblock`, {}, {
@@ -98,10 +98,10 @@ export default function AdminCardsPage() {
                     ? { ...card, isBlocked: false }
                     : card
             ));
-            setSuccess("Card разблокирована");
+            setSuccess("Card unblocked");
         } catch (error) {
-            setError("Ошибка при разблокировке карточки");
-            console.error("Ошибка разблокировки:", error);
+            setError("Error unblocking card");
+            console.error("Error unblocking card:", error);
         }
     };
 
@@ -129,12 +129,12 @@ export default function AdminCardsPage() {
             card.subtitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             card.email?.toLowerCase().includes(searchTerm.toLowerCase());
 
-        // Если админ, показываем все карточки, только фильтруем по поиску
+        // If admin, show all cards (only apply search filter)
         if (user?.isAdmin) {
             return matchesSearch;
         }
 
-        // Для обычных пользователей фильтруем по статусу
+        // For regular users, apply status filtering
         const matchesStatus =
             statusFilter === "all" ||
             (statusFilter === "active" && !card.isBlocked) ||
@@ -180,14 +180,14 @@ export default function AdminCardsPage() {
                             </Typography>
 
                             <Box sx={{ mt: 2 }}>
-                                <Typography variant="subtitle2">Контактная информация:</Typography>
+                                <Typography variant="subtitle2">Contact Information:</Typography>
                                 <Typography variant="body2">Email: {card.email}</Typography>
-                                <Typography variant="body2">Телефон: {card.phone}</Typography>
-                                <Typography variant="body2">Сайт: {card.web}</Typography>
+                                <Typography variant="body2">Phone: {card.phone}</Typography>
+                                <Typography variant="body2">Website: {card.web}</Typography>
                             </Box>
 
                             <Box sx={{ mt: 2 }}>
-                                <Typography variant="subtitle2">Адрес:</Typography>
+                                <Typography variant="subtitle2">Address:</Typography>
                                 <Typography variant="body2">
                                     {card.address?.country}, {card.address?.city}
                                 </Typography>
@@ -197,10 +197,10 @@ export default function AdminCardsPage() {
                             </Box>
 
                             <Box sx={{ mt: 2 }}>
-                                <Typography variant="subtitle2">Статистика:</Typography>
+                                <Typography variant="subtitle2">Statistics:</Typography>
                                 <Typography variant="body2">Likes: {card.likes?.length || 0}</Typography>
                                 <Typography variant="body2">
-                                    Создано: {new Date(card.createdAt).toLocaleDateString()}
+                                    Created: {new Date(card.createdAt).toLocaleDateString()}
                                 </Typography>
                             </Box>
                         </Grid>
@@ -273,10 +273,11 @@ export default function AdminCardsPage() {
             </Box>
 
             {/* Cards Grid */}
-            <Grid container spacing={3}>
+            <Grid container columns={12} spacing={3}>
                 {paginatedCards.map((card) => (
-                    <Grid item xs={12} sm={6} md={4} lg={3} key={card._id}>
+                    <Grid key={card._id} columnSpacing={3} xs={12} md={6} lg={3}>
                         <Box sx={{ position: 'relative' }}>
+                            {/* ...existing card markup... */}
                             <Card
                                 sx={{
                                     height: "100%",
@@ -378,7 +379,7 @@ export default function AdminCardsPage() {
                                     }}
                                 >
                                     <Typography variant="h5" color="error" sx={{ fontWeight: 'bold', textShadow: '0 0 6px #fff' }}>
-                                        ЗАБЛОКИРОВАНО
+                                        BLOCKED
                                     </Typography>
                                 </Box>
                             )}

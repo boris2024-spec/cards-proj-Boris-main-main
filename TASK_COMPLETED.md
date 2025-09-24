@@ -1,63 +1,63 @@
-# ✅ РЕШЕНИЕ ЗАДАЧИ: Скрытие заблокированных карточек
+# ✅ TASK COMPLETED: Hiding Blocked Cards
 
-## 🎯 Задача
-Заблокированные карточки админа не показывать на странице всем.
+## 🎯 Goal
+Do not show blocked business cards to regular users on the public cards page.
 
-## ✨ Решение
-Реализована фильтрация всех заблокированных карточек (не только админов) на главной странице приложения.
+## ✨ Solution
+Implemented filtering to exclude all blocked cards (not only admin-owned) on the main cards page.
 
-## 🔧 Технические детали
+## 🔧 Technical details
 
-### Изменённые файлы:
-- `src/pages/CardsPage.jsx` - основная логика фильтрации
+### Files changed:
+- `src/pages/CardsPage.jsx` - main filtering logic
 
-### Ключевой код:
+### Key code:
 ```javascript
-// Фильтруем заблокированные карточки - не показываем их обычным пользователям
+// Filter out blocked cards - do not show them to regular users
 allCards = allCards.filter(card => !card.isBlocked);
 ```
 
-## 🚀 Как работает
+## 🚀 How it works
 
-1. **Получение данных**: Приложение получает все карточки через API `/cards`
-2. **Фильтрация**: Исключаются все карточки с полем `isBlocked: true`
-3. **Отображение**: Пользователь видит только активные карточки
+1. **Fetch**: The app requests all cards from the `/cards` API
+2. **Filter**: All cards with `isBlocked: true` are excluded
+3. **Render**: Users see only active business cards
 
-## 🧪 Тестирование
+## 🧪 Testing
 
-### Автоматическое тестирование:
-1. Откройте браузер на странице http://localhost:5174/
-2. Откройте консоль разработчика (F12)
-3. Выполните код из файла `test-block-cards-visibility.js`
-4. Запустите: `testBlockedCardsVisibility()`
+### Automated testing:
+1. Open the app at `http://localhost:5174/`
+2. Open developer console (F12)
+3. Paste/run the code from `test-block-cards-visibility.js`
+4. Run: `testBlockedCardsVisibility()`
 
-### Ручное тестирование:
-1. **До блокировки**: Посетите главную страницу, запомните количество карточек
-2. **Блокировка**: Войдите в админ-панель и заблокируйте любую карточку
-3. **После блокировки**: Обновите главную страницу - карточек стало меньше
+### Manual testing:
+1. **Before blocking**: Visit the main cards page and note the number of cards
+2. **Block a card**: Sign in to the admin panel and block any card
+3. **After blocking**: Refresh the main page — the blocked card should no longer be visible
 
-## 📊 Результат
+## 📊 Result
 
-- ✅ Заблокированные карточки не отображаются на главной странице
-- ✅ Администраторы могут управлять карточками через админ-панель
-- ✅ Простое и надёжное решение
-- ✅ Минимальное влияние на производительность
+- ✅ Blocked cards are not displayed on the public cards page
+- ✅ Administrators can manage cards through the admin panel
+- ✅ Simple and reliable solution
+- ✅ Minimal performance impact
 
-## 🔄 Состояние до/после
+## 🔄 Before / After
 
-### До:
+### Before:
 ```javascript
-// Показывались ВСЕ карточки, включая заблокированные
+// All cards were shown, including blocked ones
 setCards(response.data);
 ```
 
-### После:
+### After:
 ```javascript
-// Показываются только активные карточки
+// Only active cards are shown
 allCards = allCards.filter(card => !card.isBlocked);
 setCards(allCards);
 ```
 
-## 🎉 Готово!
+## 🎉 Done!
 
-Функциональность реализована и готова к использованию. Заблокированные карточки больше не отображаются на главной странице для всех пользователей.
+The feature is implemented and ready to use. Blocked cards are no longer visible on the main page for regular users.

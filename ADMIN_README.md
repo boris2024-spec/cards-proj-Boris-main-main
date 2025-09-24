@@ -1,61 +1,61 @@
-# Функциональность администратора
+# Admin functionality
 
-## Обзор
+## Overview
 
-В приложение добавлена полная функциональность администратора, которая позволяет управлять пользователями и карточками.
+The application includes full admin functionality that allows managing users and cards.
 
-## Основные возможности
+## Key features
 
-### 1. Роли пользователей
-- **Обычный пользователь** - базовые права
-- **Бизнес пользователь** - может создавать карточки
-- **Администратор** - полные права управления системой
+### 1. User roles
+- **Regular user** - basic permissions
+- **Business user** - can create cards
+- **Administrator** - full system management permissions
 
-### 2. Административная панель
-- Доступна по маршруту `/admin`
-- Статистика системы в реальном времени
-- Быстрые ссылки на управление пользователями и карточками
+### 2. Admin panel
+- Accessible at route `/admin`
+- Real-time system statistics
+- Quick links to manage users and cards
 
-### 3. Управление пользователями (`/admin/users`)
-- Просмотр всех пользователей
-- Поиск по имени и email
-- Блокировка/разблокировка пользователей
-- Изменение ролей (бизнес, администратор)
-- Удаление пользователей
-- Редактирование профилей пользователей
+### 3. User management (`/admin/users`)
+- View all users
+- Search by name and email
+- Block/unblock users
+- Change roles (business, administrator)
+- Delete users
+- Edit user profiles
 
-### 4. Управление карточками (`/admin/cards`)
-- Просмотр всех карточек
-- Поиск и фильтрация
-- Блокировка/разблокировка карточек
-- Удаление карточек
-- Просмотр деталей карточек
+### 4. Cards management (`/admin/cards`)
+- View all cards
+- Search and filtering
+- Block/unblock cards
+- Delete cards
+- View card details
 
-## Файлы и компоненты
+## Files and components
 
-### Guards (Защита маршрутов)
-- `src/guards/AdminRoute.jsx` - Защита админских маршрутов
+### Guards (Route protection)
+- `src/guards/AdminRoute.jsx` - protects admin routes
 
-### Страницы
-- `src/pages/AdminDashboardPage.jsx` - Главная панель администратора
-- `src/pages/AdminUsersPage.jsx` - Управление пользователями
-- `src/pages/AdminCardsPage.jsx` - Управление карточками
+### Pages
+- `src/pages/AdminDashboardPage.jsx` - Admin dashboard
+- `src/pages/AdminUsersPage.jsx` - User management
+- `src/pages/AdminCardsPage.jsx` - Cards management
 
 ### Hooks
-- `src/users/hooks/useAdmin.js` - Хук для админских операций
+- `src/users/hooks/useAdmin.js` - Hook for admin operations
 
-### Компоненты
-- `src/components/AdminSetupHelper.jsx` - Помощник для назначения первого админа
+### Components
+- `src/components/AdminSetupHelper.jsx` - Helper to assign the first admin
 
-### Маршруты
-Добавлены новые маршруты в `src/routes/routesDict.js`:
-- `/admin` - Главная панель
-- `/admin/users` - Управление пользователями
-- `/admin/cards` - Управление карточками
+### Routes
+New routes were added in `src/routes/routesDict.js`:
+- `/admin` - Admin dashboard
+- `/admin/users` - User management
+- `/admin/cards` - Cards management
 
-## Схемы данных
+## Data schemas
 
-### Обновленная модель пользователя
+### Updated user model
 ```javascript
 {
   name: { first, middle, last },
@@ -64,73 +64,73 @@
   image: { url, alt },
   address: { street, houseNumber, city, state, country, zip },
   isBusiness: Boolean,
-  isAdmin: Boolean,     // НОВОЕ ПОЛЕ
-  isBlocked: Boolean,   // Для блокировки пользователей
+  isAdmin: Boolean,     // NEW FIELD
+  isBlocked: Boolean,   // Used to block users
   createdAt,
   updatedAt
 }
 ```
 
-## API Endpoints (требуются на бэкенде)
+## API Endpoints (required on the backend)
 
-### Пользователи
-- `GET /users` - Получить всех пользователей (только для админов)
-- `PUT /users/:id` - Обновить пользователя (только для админов)
-- `PATCH /users/:id` - Частичное обновление пользователя
-- `DELETE /users/:id` - Удалить пользователя (только для админов)
+### Users
+- `GET /users` - Get all users (admin only)
+- `PUT /users/:id` - Update a user (admin only)
+- `PATCH /users/:id` - Partially update a user
+- `DELETE /users/:id` - Delete a user (admin only)
 
-### Карточки
-- `GET /cards` - Получить все карточки (с возможностью фильтрации)
-- `PUT /cards/:id` - Обновить карточку (только для админов)
-- `PATCH /cards/:id` - Частичное обновление карточки
-- `DELETE /cards/:id` - Удалить карточку (только для админов)
+### Cards
+- `GET /cards` - Get all cards (with filtering support)
+- `PUT /cards/:id` - Update a card (admin only)
+- `PATCH /cards/:id` - Partially update a card
+- `DELETE /cards/:id` - Delete a card (admin only)
 
-## Безопасность
+## Security
 
-1. Все админские маршруты защищены компонентом `AdminRoute`
-2. Проверка прав доступа осуществляется на основе поля `isAdmin`
-3. Токен авторизации передается в заголовках запросов
-4. Административные функции недоступны обычным пользователям
+1. All admin routes are protected by the `AdminRoute` component
+2. Access rights are checked based on the `isAdmin` field
+3. Authorization token is passed in request headers
+4. Admin functions are not available to regular users
 
-## Первоначальная настройка
+## Initial setup
 
-Для назначения первого администратора:
+To assign the first administrator:
 
-1. Зарегистрируйте пользователя обычным способом
-2. Используйте компонент `AdminSetupHelper` (кнопка в правом нижнем углу)
-3. Введите email пользователя, которого нужно сделать администратором
-4. После назначения пользователь получит доступ к административной панели
+1. Register a user as usual
+2. Use the `AdminSetupHelper` component (button in the bottom-right corner)
+3. Enter the email of the user to make an administrator
+4. After assignment, the user will get access to the admin panel
 
-## Использование
+## Usage
 
-### Вход в административную панель
-1. Войдите как пользователь с правами администратора
-2. В меню навигации появится пункт "Admin Panel"
-3. Перейдите в административную панель
+### Entering the admin panel
+1. Log in as a user with administrator rights
+2. An "Admin Panel" item will appear in the navigation menu
+3. Go to the admin panel
 
-### Управление пользователями
-1. Перейдите в "Управление пользователями"
-2. Используйте поиск для нахождения конкретных пользователей
-3. Используйте кнопки действий для управления пользователями
+### User management
+1. Go to "User management"
+2. Use the search to find specific users
+3. Use action buttons to manage users
 
-### Управление карточками
-1. Перейдите в "Управление карточками"
-2. Фильтруйте карточки по статусу
-3. Просматривайте детали и управляйте карточками
+### Cards management
+1. Go to "Cards management"
+2. Filter cards by status
+3. View details and manage cards
 
-## Интеграция с бэкендом
+## Backend integration
 
-Убедитесь, что ваш бэкенд поддерживает:
-1. Поле `isAdmin` в модели пользователя
-2. Поле `isBlocked` для пользователей и карточек
-3. Соответствующие API endpoints для CRUD операций
-4. Проверку прав доступа на серверной стороне
+Make sure your backend supports:
+1. The `isAdmin` field in the user model
+2. The `isBlocked` field for users and cards
+3. Corresponding API endpoints for CRUD operations
+4. Access rights validation on the server side
 
-## Разработка
+## Development
 
-Для добавления новых административных функций:
-1. Создайте новую страницу в `src/pages/`
-2. Добавьте маршрут в `routesDict.js`
-3. Защитите маршрут компонентом `AdminRoute`
-4. Добавьте соответствующие функции в `useAdmin` хук
-5. Обновите навигацию в административной панели
+To add new admin features:
+1. Create a new page in `src/pages/`
+2. Add a route to `routesDict.js`
+3. Protect the route with the `AdminRoute` component
+4. Add corresponding functions to the `useAdmin` hook
+5. Update the admin panel navigation

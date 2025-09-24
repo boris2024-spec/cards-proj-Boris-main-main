@@ -22,7 +22,7 @@ function BCardFooter({ toggleLike, cardId, likes, phone, onDelete, ownerId }) {
   };
 
   const handleDelete = async (e) => {
-    e.stopPropagation(); 75328
+    e.stopPropagation();
     try {
       const response = await fetch(
         `${API_BASE_URL}/cards/${cardId}`,
@@ -71,7 +71,7 @@ function BCardFooter({ toggleLike, cardId, likes, phone, onDelete, ownerId }) {
         disableSpacing
       >
         {(user?.isAdmin || (user && token && user?._id === ownerId)) ? (
-          // Для админа или владельца показываем все опции
+          // Show full options for admin or owner
           <>
             {/* Management Actions */}
             <Box sx={{ display: 'flex', gap: 0.5, minWidth: 80 }}>
@@ -146,7 +146,7 @@ function BCardFooter({ toggleLike, cardId, likes, phone, onDelete, ownerId }) {
             </Box>
           </>
         ) : (
-          // Для обычных пользователей
+          // For regular users
           <>
             <Tooltip title="Call Business" arrow>
               <IconButton
