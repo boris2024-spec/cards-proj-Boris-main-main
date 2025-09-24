@@ -35,6 +35,13 @@ function CardsPage() {
   const { isDark } = useTheme();
   const [filter, setFilter] = useState("default"); // default, likes, date
 
+  // Удаление карточки
+  const handleDeleteCard = useCallback((cardId) => {
+    setCards(prevCards => prevCards.filter(card => card._id !== cardId));
+    setFilteredCards(prevCards => prevCards.filter(card => card._id !== cardId));
+    // ...existing code...
+  }, [setSnack]);
+
   const getCardsFromServer = useCallback(async () => {
     try {
       setIsLoading(true);
