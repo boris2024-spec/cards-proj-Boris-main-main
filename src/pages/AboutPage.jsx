@@ -50,7 +50,7 @@ function AboutPage() {
           to modernize your networking approach, our platform provides the tools and flexibility you need to succeed in today's digital marketplace.
         </p>
         <p>
-          You can try our service online on modern Vercel hosting: <a href="https://cards-proj-boris-main.vercel.app" target="_blank" rel="noopener noreferrer">Demo Site</a>.
+          You can try our service online on modern Vercel hosting: <a href="https://cards-projec.netlify.app/about-page" target="_blank" rel="noopener noreferrer">Demo Site</a>.
         </p>
       </div>
       <div style={{ flex: 1, display: "flex", justifyContent: "center", marginTop: isMobile ? 30 : 75 }}>

@@ -1,6 +1,6 @@
 <div align="center">
 
-[🌐 Live Demo](https://cards-proj-boris-main.vercel.app)
+[🌐 Live Demo](https://cards-projec.netlify.app/)
 
 # Business Card Manager (React + MUI)
 
